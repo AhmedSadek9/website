@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر عطور أحمد الفاخرة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #fffafb; overflow-x: hidden; }
+        
+        /* 1. تصميم شاشة الاختيار الأولي (Landing Page) */
+        .selection-screen {
+            display: flex; height: 100vh; width: 100%; position: fixed;
+            top: 0; left: 0; z-index: 1000; background: white;
+            transition: transform 0.6s ease-in-out;
+        }
+        .select-box {
+            flex: 1; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            transition: 0.5s; cursor: pointer; position: relative;
+        }
+        .select-men { background-color: #f8fafc; border-left: 1px solid #e2e8f0; }
+        .select-women { background-color: #fff1f2; }
+        
+        .select-box:hover { flex: 1.3; }
+        .select-box h2 { font-size: 2.5rem; font-weight: bold; transition: 0.3s; }
+        .select-men:hover h2 { color: #ef4444; } /* أحمر للرجال */
+        .select-women:hover h2 { color: #db2777; } /* وردي داكن للنساء */
+
+        /* 2. تصميم الأزرار (البيضاوي) */
+        .btn-filter {
+            border-radius: 50px; padding: 8px 35px; font-weight: bold;
+            transition: 0.3s; border: 1px solid #fbcfe8;
+            background-color: #fce7f3; color: #9d174d;
+            display: flex; align-items: center; gap: 10px; cursor: pointer;
+        }
+        
+        /* اللون النشط للرجال (أحمر) */
+        .men-theme .btn-filter.active {
+            background-color: #ef4444; color: white; border-color: #ef4444;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+        
+        /* اللون النشط للنساء (وردي داكن) */
+        .women-theme .btn-filter.active {
+            background-color: #db2777; color: white; border-color: #db2777;
+            box-shadow: 0 4px 12px rgba(219, 39, 119, 0.3);
+        }
+
+        /* 3. تصميم الكروت */
+        .perfume-card { transition: 0.3s; }
+        .perfume-card:hover { transform: translateY(-5px); }
+        
+        /* العناوين الفرعية الملونة */
+        .men-theme .subtitle { color: #ef4444; } /* أحمر */
+        .women-theme .subtitle { color: #db2777; } /* وردي داكن */
+        
+        /* تاجات النوتات */
+        .tag { border-radius: 50px; padding: 4px 12px; font-size: 0.75rem; font-weight: bold; }
+        .men-theme .tag { background-color: #fee2e2; color: #b91c1c; } /* أحمر فاتح */
+        .women-theme .tag { background-color: #fce7f3; color: #9d174d; } /* وردي فاتح */
+
+        .hidden { display: none !class; }
+    </style>
+</head>
+<body>
+
+    <div id="welcomeScreen" class="selection-screen">
+        <div class="select-box select-men" onclick="showPage('menPage')">
+            <h2 class="text-slate-700">Design For Men</h2>
+            <p class="text-slate-400 mt-4 font-bold">اكتشف المجموعة الرجالية</p>
+        </div>
+        <div class="select-box select-women" onclick="showPage('womenPage')">
+            <h2 class="text-rose-700">Design For Women</h2>
+            <p class="text-rose-400 mt-4 font-bold">اكتشف المجموعة النسائية</p>
+        </div>
+    </div>
+
+    <div id="menPage" class="hidden men-theme">
+        <header class="bg-white py-8 mb-6 shadow-sm relative border-b-2 border-red-50">
+            <button onclick="goBack()" class="absolute right-8 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 font-bold">← العودة</button>
+            <div class="container mx-auto text-center">
+                <h1 class="text-3xl font-bold text-red-600 uppercase tracking-wider">Design men perfumes</h1>
+                <p class="text-gray-500 text-sm mt-2">تصنيف حسب الفصول</p>
+            </div>
+        </header>
+
+        <nav class="container mx-auto px-4 mb-12">
+            <div class="flex flex-wrap justify-center gap-6 p-4 bg-white/50 rounded-3xl border border-pink-100 max-w-2xl mx-auto">
+                <button onclick="filterSelection('all', 'menPage')" class="btn-filter active">الكل</button>
+                <button onclick="filterSelection('winter', 'menPage')" class="btn-filter"><span>❤️</span> شتوي</button>
+                <button onclick="filterSelection('summer', 'menPage')" class="btn-filter"><span>❄️</span> صيفي</button>
+            </div>
+        </nav>
+
+        <main class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
+            
+            <div class="perfume-card winter bg-white rounded-3xl p-6 shadow-md border border-pink-50">
+                <img src="Design For Men/1 Million Lucky – Rabanne.jpg" class="w-full h-52 object-contain mb-4">
+                <h3 class="text-xl font-bold text-gray-800">1 Million Lucky</h3>
+                <p class="subtitle text-sm mb-2 font-bold">شتوي / خريفي</p>
+                <p class="text-gray-600 text-sm mb-4 leading-relaxed">عطر خشبي حلو ومميز بنوتات البندق والعسل.</p>
+                <div class="flex justify-between items-center pt-4 border-t border-pink-50">
+                    <span class="text-pink-600 font-bold">4.4 ⭐</span>
+                    <span class="tag">بندق - عسل</span>
+                </div>
+            </div>
+
+            <div class="perfume-card winter bg-white rounded-3xl p-6 shadow-md border border-pink-50">
+                <img src="Design For Men/Tom Ford Tobacco Vanille.jpg" class="w-full h-52 object-contain mb-4">
+                <h3 class="text-xl font-bold text-gray-800">Tobacco Vanille</h3>
+                <p class="subtitle text-sm mb-2 font-bold">شتوي - ثقيل</p>
+                <p class="text-gray-600 text-sm mb-4 leading-relaxed">فخامة التبغ الممزوج بالفانيليا والكاكاو.</p>
+                <div class="flex justify-between items-center pt-4 border-t border-pink-50">
+                    <span class="text-pink-600 font-bold">4.2 ⭐</span>
+                    <span class="tag">تبغ - فانيلا</span>
+                </div>
+            </div>
+
+            <div class="perfume-card summer bg-white rounded-3xl p-6 shadow-md border border-pink-50">
+                <img src="Design For Men/Acqua di Gio Profumo.jpg" class="w-full h-52 object-contain mb-4">
+                <h3 class="text-xl font-bold text-gray-800">Acqua di Giò Profumo</h3>
+                <p class="subtitle text-sm mb-2 font-bold">صيفي - منعش</p>
+                <p class="text-gray-600 text-sm mb-4 leading-relaxed">مزيج رائع من النوتات البحرية والبخور.</p>
+                <div class="flex justify-between items-center pt-4 border-t border-pink-50">
+                    <span class="text-pink-600 font-bold">4.4 ⭐</span>
+                    <span class="tag">بحري - بخور</span>
+                </div>
+            </div>
+
+            <div class="perfume-card summer bg-white rounded-3xl p-6 shadow-md border border-pink-50">
+                <img src="Design For Men/Dior Sauvage Eau de Parfum.jpg" class="w-full h-52 object-contain mb-4">
+                <h3 class="text-xl font-bold text-gray-800">Sauvage EDP</h3>
+                <p class="subtitle text-sm mb-2 font-bold">صيفي / طوال العام</p>
+                <p class="text-gray-600 text-sm mb-4 leading-relaxed">عطر كلاسيكي جذاب يجمع بين الانتعاش والدفء.</p>
+                <div class="flex justify-between items-center pt-4 border-t border-pink-50">
+                    <span class="text-pink-600 font-bold">4.2 ⭐</span>
+                    <span class="tag">برغموت - فانيلا</span>
+                </div>
+            </div>
+
+            <div class="perfume-card summer bg-white rounded-3xl p-6 shadow-md border border-pink-50">
+                <img src="Design For Men/Bleu de Chanel Eau de Parfum.jpg" class="w-full h-52 object-contain mb-4">
+                <h3 class="text-xl font-bold text-gray-800">Bleu de Chanel</h3>
+                <p class="subtitle text-sm mb-2 font-bold">صيفي - نظيف</p>
+                <p class="text-gray-600 text-sm mb-4 leading-relaxed">أيقونة العطور الخشبية النظيفة والرسمية.</p>
+                <div class="flex justify-between items-center pt-4 border-t border-pink-50">
+                    <span class="text-pink-600 font-bold">4.4 ⭐</span>
+                    <span class="tag">حمضيات - أخشاب</span>
+                </div>
+            </div>
+
+            <div class="perfume-card winter bg-white rounded-3xl p-6 shadow-md border border-pink-50">
+                <img src="Design For Men/Versace Eros.jpg" class="w-full h-52 object-contain mb-4">
+                <h3 class="text-xl font-bold text-gray-800">Versace Eros</h3>
+                <p class="subtitle text-sm mb-2 font-bold">شتوي - ليلي</p>
+                <p class="text-gray-600 text-sm mb-4 leading-relaxed">عطر القوة والجاذبية بنوتات النعناع والتفاح.</p>
+                <div class="flex justify-between items-center pt-4 border-t border-pink-50">
+                    <span class="text-pink-600 font-bold">4.1 ⭐</span>
+                    <span class="tag">نعناع - فانيلا</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="womenPage" class="hidden women-theme">
+        <header class="bg-white py-8 mb-6 shadow-sm relative border-b-2 border-rose-50">
+            <button onclick="goBack()" class="absolute right-8 top-1/2 -translate-y-1/2 text-rose-300 hover:text-rose-600 font-bold">← العودة</button>
+            <div class="container mx-auto text-center">
+                <h1 class="text-3xl font-bold text-rose-600 uppercase tracking-wider">Design women perfumes</h1>
+                <p class="text-rose-400 text-sm mt-2 font-medium">تصنيف حسب الفصول</p>
+            </div>
+        </header>
+
+        <nav class="container mx-auto px-4 mb-12">
+            <div class="flex flex-wrap justify-center gap-6 p-4 bg-white/50 rounded-3xl border border-rose-100 max-w-2xl mx-auto">
+                <button onclick="filterSelection('all', 'womenPage')" class="btn-filter active">الكل</button>
+                <button onclick="filterSelection('winter', 'womenPage')" class="btn-filter"><span>❤️</span> شتوي</button>
+                <button onclick="filterSelection('summer', 'womenPage')" class="btn-filter"><span>❄️</span> صيفي</button>
+            </div>
+        </nav>
+
+        <main class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
+            
+            <div class="perfume-card winter bg-white rounded-3xl p-6 shadow-md border border-rose-50">
+                <img src="Design For Women/Burberry Her Elixir de Parfum.jpg" class="w-full h-52 object-contain mb-4">
+                <h3 class="text-xl font-bold text-gray-800">Her Elixir</h3>
+                <p class="subtitle text-sm mb-2 font-bold">شتوي - كريمي</p>
+                <p class="text-gray-600 text-sm mb-4 leading-relaxed">عطر فاكهي زهري حلو ومكثف بنوتات التوت العليق والأخشاب الدافئة.</p>
+                <div class="flex justify-between items-center pt-4 border-t border-rose-50">
+                    <span class="text-rose-600 font-bold">4.6 ⭐</span>
+                    <span class="tag">توت - أخشاب</span>
+                </div>
+            </div>
+
+            <div class="perfume-card winter bg-white rounded-3xl p-6 shadow-md border border-rose-50">
+                <img src="Design For Women/Tom Ford Lost Cherry.jpg" class="w-full h-52 object-contain mb-4">
+                <h3 class="text-xl font-bold text-gray-800">Lost Cherry</h3>
+                <p class="subtitle text-sm mb-2 font-bold">شتوي - دافئ</p>
+                <p class="text-gray-600 text-sm mb-4 leading-relaxed">عطر دافئ وجذاب برائحة الكرز الداكن واللوز المر.</p>
+                <div class="flex justify-between items-center pt-4 border-t border-rose-50">
+                    <span class="text-rose-600 font-bold">4.3 ⭐</span>
+                    <span class="tag">كرز - لوز</span>
+                </div>
+            </div>
+
+            <div class="perfume-card winter bg-white rounded-3xl p-6 shadow-md border border-rose-50">
+                <img src="Design For Women/Prada Paradoxe Intense.jpg" class="w-full h-52 object-contain mb-4">
+                <h3 class="text-xl font-bold text-gray-800">Paradoxe Intense</h3>
+                <p class="subtitle text-sm mb-2 font-bold">شتوي - قوي</p>
+                <p class="text-gray-600 text-sm mb-4 leading-relaxed">عطر زهري شرقي مكثف يجمع بين الانتعاش والجرأة.</p>
+                <div class="flex justify-between items-center pt-4 border-t border-rose-50">
+                    <span class="text-rose-600 font-bold">4.5 ⭐</span>
+                    <span class="tag">زهري - شرقي</span>
+                </div>
+            </div>
+
+            <div class="perfume-card winter bg-white rounded-3xl p-6 shadow-md border border-rose-50">
+                <img src="Design For Women/Guerlain Tabac Sahara.jpg" class="w-full h-52 object-contain mb-4">
+                <h3 class="text-xl font-bold text-gray-800">Tabac Sahara</h3>
+                <p class="subtitle text-sm mb-2 font-bold">شتوي - ثقيل</p>
+                <p class="text-gray-600 text-sm mb-4 leading-relaxed">عطر خشبي شرقي غني بنوتات التبغ الدافئة والعود الفاخر.</p>
+                <div class="flex justify-between items-center pt-4 border-t border-rose-50">
+                    <span class="text-rose-600 font-bold">4.4 ⭐</span>
+                    <span class="tag">تبغ - عود</span>
+                </div>
+            </div>
+
+            <div class="perfume-card summer bg-white rounded-3xl p-6 shadow-md border border-rose-50">
+                <img src="Design For Women/Gucci Flora Gorgeous Gardenia.jpg" class="w-full h-52 object-contain mb-4">
+                <h3 class="text-xl font-bold text-gray-800">Gorgeous Gardenia</h3>
+                <p class="subtitle text-sm mb-2 font-bold">صيفي - ناعم</p>
+                <p class="text-gray-600 text-sm mb-4 leading-relaxed">عطر زهري منعش ولطيف بنوتات الغاردينيا الساحرة والتوت الأحمر.</p>
+                <div class="flex justify-between items-center pt-4 border-t border-rose-50">
+                    <span class="text-rose-600 font-bold">4.2 ⭐</span>
+                    <span class="tag">غاردينيا - توت</span>
+                </div>
+            </div>
+
+            <div class="perfume-card summer bg-white rounded-3xl p-6 shadow-md border border-rose-50">
+                <img src="Design For Women/Versace Crystal Noir (For Women).jpg" class="w-full h-52 object-contain mb-4">
+                <h3 class="text-xl font-bold text-gray-800">Crystal Noir</h3>
+                <p class="subtitle text-sm mb-2 font-bold">صيفي / طوال العام</p>
+                <p class="text-gray-600 text-sm mb-4 leading-relaxed">عطر جذاب وغامض بنوتات الغاردينيا السوداء والأخشاب الدافئة.</p>
+                <div class="flex justify-between items-center pt-4 border-t border-rose-50">
+                    <span class="text-rose-600 font-bold">7. ⭐</span>
+                    <span class="tag">غاردينيا - أخشاب</span>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // دالة لعرض الصفحة المحددة وإخفاء الأخرى
+        function showPage(pageId) {
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('menPage').classList.add('hidden');
+            document.getElementById('womenPage').classList.add('hidden');
+            document.getElementById(pageId).classList.remove('hidden');
+            window.scrollTo(0, 0); // العودة لأعلى الصفحة
+        }
+
+        // دالة للعودة إلى الشاشة الرئيسية
+        function goBack() {
+            document.getElementById('menPage').classList.add('hidden');
+            document.getElementById('womenPage').classList.add('hidden');
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+        }
+
+        // دالة الفلترة المعدلة لتعمل على الصفحة النشطة فقط
+        function filterSelection(c, pageId) {
+            let pageContext = document.getElementById(pageId);
+            let x = pageContext.getElementsByClassName("perfume-card");
+            
+            // تحديث ظهور الكروت داخل الصفحة المحددة فقط
+            for (let i = 0; i < x.length; i++) {
+                if (c == "all") {
+                    x[i].style.display = "block";
+                } else {
+                    x[i].style.display = "none";
+                    if (x[i].classList.contains(c)) {
+                        x[i].style.display = "block";
+                    }
+                }
+            }
+            
+            // تحديث شكل الزر النشط داخل نفس الصفحة
+            let btns = pageContext.getElementsByClassName("btn-filter");
+            for (let j = 0; j < btns.length; j++) {
+                btns[j].classList.remove("active");
+            }
+            event.currentTarget.classList.add("active");
+        }
+    </script>
+
+</body>
+</html>
