@@ -1,325 +1,315 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر عطور أحمد الفاخرة</title>
+    <title>Ahmed Perfumes | Luxury Boutique & Supply Chain</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #fffafb; overflow-x: hidden; }
-        
-        /* 1. تصميم شاشة الاختيار الأولي (Landing Page) - متجاوب */
-        .selection-screen {
-            display: flex;
-            height: 100vh;
-            width: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            background: white;
-            transition: transform 0.6s ease-in-out;
-            flex-direction: column; /* موبايل أولاً */
+        :root {
+            --primary-black: #0a0a0a;
+            --accent-gold: #c5a059;
+            --soft-ivory: #fcfcfc;
+            --border-muted: #e5e5e5;
         }
 
-        @media (min-width: 768px) {
-            .selection-screen {
-                flex-direction: row; /* لابتوب بجانب بعض */
-            }
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background-color: var(--soft-ivory); 
+            color: var(--primary-black);
+            margin: 0;
+            overflow-x: hidden;
         }
+
+        /* ===== ✨ Animations ===== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .selection-screen {
+            display: flex; height: 100vh; width: 100%; position: fixed;
+            top: 0; left: 0; z-index: 1000; background: white;
+            transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+            flex-direction: column;
+        }
+        @media (min-width: 768px) { .selection-screen { flex-direction: row; } }
 
         .select-box {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: 0.5s;
-            cursor: pointer;
-            position: relative;
-            padding: 20px;
+            flex: 1; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            transition: 0.5s ease; cursor: pointer; position: relative; padding: 40px;
+            text-align: center; border: 1px solid #f1f1f1;
         }
+        .select-box:hover { background-color: #fff; transform: scale(1.02); z-index: 10; }
+        @media (min-width: 768px) { .select-box:hover { flex: 1.4; } }
 
-        .select-men { background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; }
-        .select-women { background-color: #fff1f2; }
-
-        @media (min-width: 768px) {
-            .select-men { border-bottom: none; border-left: 1px solid #e2e8f0; }
-            .select-box:hover { flex: 1.3; }
-        }
-        
-        .select-box h2 { font-size: 1.8rem; font-weight: bold; transition: 0.3s; text-align: center; }
+        .select-box h2 { font-size: 1.6rem; font-weight: 200; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 15px; }
         @media (min-width: 768px) { .select-box h2 { font-size: 2.5rem; } }
 
-        /* 2. تصميم الأزرار (البيضاوي) */
+        /* كروت العطور والزجاجات */
+        .perfume-card, .bottle-card { 
+            background: white; border: 1px solid transparent; transition: 0.5s ease; 
+            display: flex; flex-direction: column; padding: 30px; height: 100%;
+            opacity: 0; transform: translateY(40px);
+        }
+        .perfume-card:hover, .bottle-card:hover { 
+            border-color: var(--accent-gold); 
+            box-shadow: 0 25px 60px rgba(197,160,89,0.25);
+            transform: translateY(-8px);
+        }
+        .perfume-card img, .bottle-card img { transition: transform 0.5s ease; }
+        .perfume-card:hover img, .bottle-card:hover img { transform: scale(1.1); }
+
+        .bg-lux-white { background-color: #ffffff; }
+        .bg-lux-black { background-color: #0c0c0c; color: white; }
+        .select-men { background-color: #fafafa; }
+        .select-women { background-color: #fffbfc; }
+
         .btn-filter {
-            border-radius: 50px;
-            padding: 8px 25px;
-            font-weight: bold;
-            transition: 0.3s;
-            border: 1px solid #fbcfe8;
-            background-color: #fce7f3;
-            color: #9d174d;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            white-space: nowrap; /* منع النص من النزول لسطر جديد */
+            border-radius: 0px; padding: 8px 30px; font-weight: 400;
+            transition: 0.4s; border: 1px solid var(--border-muted);
+            background-color: transparent; color: #888;
+            text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem;
+            white-space: nowrap;
         }
-        
-        /* اللون النشط للرجال (أحمر) */
-        .men-theme .btn-filter.active {
-            background-color: #ef4444; color: white; border-color: #ef4444;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-        }
-        
-        /* اللون النشط للنساء (وردي داكن) */
-        .women-theme .btn-filter.active {
-            background-color: #db2777; color: white; border-color: #db2777;
-            box-shadow: 0 4px 12px rgba(219, 39, 119, 0.3);
-        }
+        .active { background-color: var(--primary-black) !important; color: white !important; border-color: var(--primary-black) !important; }
 
-        /* 3. تصميم الكروت */
-        .perfume-card { transition: 0.3s; background: white; }
-        .perfume-card:hover { transform: translateY(-5px); }
+        .tag { font-size: 0.6rem; letter-spacing: 2px; color: var(--accent-gold); text-transform: uppercase; font-weight: 700; margin-bottom: 8px; display: block; }
         
-        .men-theme .subtitle { color: #ef4444; }
-        .women-theme .subtitle { color: #db2777; }
-        
-        .tag { border-radius: 50px; padding: 4px 12px; font-size: 0.75rem; font-weight: bold; }
-        .men-theme .tag { background-color: #fee2e2; color: #b91c1c; }
-        .women-theme .tag { background-color: #fce7f3; color: #9d174d; }
-
-        /* إخفاء السكرول بار للأزرار في الموبايل */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        /* كروت الموردين */
+        .supplier-card { border-left: 3px solid var(--accent-gold); padding: 2rem; background: white; transition: 0.4s ease; height: 100%; display: flex; flex-direction: column; }
+        .supplier-card:hover { box-shadow: 0 15px 40px rgba(0,0,0,0.05); border-left-width: 8px; }
 
         .hidden { display: none !important; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        footer { border-top: 1px solid var(--border-muted); background: white; }
     </style>
 </head>
 <body>
 
-    <div id="welcomeScreen" class="selection-screen">
-        <div class="select-box select-men" onclick="showPage('menPage')">
-            <h2 class="text-slate-700">Design For Men</h2>
-            <p class="text-slate-400 mt-4 font-bold">اكتشف المجموعة الرجالية</p>
+    <div id="firstChoice" class="selection-screen">
+        <div class="absolute top-12 w-full text-center z-20 fade-in">
+            <h1 class="text-xs md:text-sm font-light tracking-[0.6em] text-gray-400 uppercase">Ahmed Perfumes | Private Selection</h1>
         </div>
-        <div class="select-box select-women" onclick="showPage('womenPage')">
-            <h2 class="text-rose-700">Design For Women</h2>
-            <p class="text-rose-400 mt-4 font-bold">اكتشف المجموعة النسائية</p>
+        <div class="select-box bg-lux-white" onclick="showCategory('Designer')">
+            <h2 class="text-gray-800">Designer</h2>
+            <p class="text-gray-400 text-[10px] tracking-[0.3em] uppercase mt-2 font-bold">The Global Selection</p>
+        </div>
+        <div class="select-box bg-lux-black" onclick="showCategory('Niche')">
+            <h2 class="text-white">Niche</h2>
+            <p class="text-gray-600 text-[10px] tracking-[0.3em] uppercase mt-2 font-bold">Rare Masterpieces</p>
         </div>
     </div>
 
-    <div id="menPage" class="hidden men-theme">
-        <header class="bg-white py-6 md:py-8 mb-6 shadow-sm relative border-b-2 border-red-50">
-            <button onclick="goBack()" class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 font-bold">← عودة</button>
-            <div class="container mx-auto text-center px-12">
-                <h1 class="text-xl md:text-3xl font-bold text-red-600 uppercase tracking-wider">Design men perfumes</h1>
-                <p class="text-gray-500 text-xs md:text-sm mt-2">تصنيف حسب الفصول</p>
-            </div>
+    <div id="genderChoice" class="selection-screen hidden">
+        <button onclick="goBackToFirst()" class="absolute top-8 left-8 z-30 text-gray-400 hover:text-black transition tracking-widest text-[10px] uppercase border-b border-gray-100 pb-2">← Back to Menu</button>
+        <div class="select-box select-men" onclick="openPerfumePage('Men')">
+            <h2 class="text-gray-800">Gentlemen</h2>
+            <p id="genderSubtitleMen" class="text-gray-400 text-[10px] tracking-[0.3em] uppercase font-bold">Collection</p>
+        </div>
+        <div class="select-box select-women" onclick="openPerfumePage('Women')">
+            <h2 class="text-gray-800">Ladies</h2>
+            <p id="genderSubtitleWomen" class="text-gray-400 text-[10px] tracking-[0.3em] uppercase font-bold">Collection</p>
+        </div>
+    </div>
+
+    <div id="designerMenPage" class="hidden min-h-screen pb-20">
+        <header class="bg-white py-14 mb-8 text-center border-b border-gray-50 relative">
+            <button onclick="goBackToGender()" class="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 text-gray-300 hover:text-black uppercase text-[10px]">BACK</button>
+            <h1 class="text-xl md:text-2xl font-light tracking-[0.4em] uppercase">Designer | Men</h1>
         </header>
-
-        <nav class="container mx-auto px-4 mb-12">
-            <div class="flex overflow-x-auto md:justify-center gap-4 p-4 bg-white/50 rounded-3xl border border-pink-100 max-w-2xl mx-auto no-scrollbar">
-                <button onclick="filterSelection('all', 'menPage')" class="btn-filter active">الكل</button>
-                <button onclick="filterSelection('winter', 'menPage')" class="btn-filter"><span>❤️</span> شتوي</button>
-                <button onclick="filterSelection('summer', 'menPage')" class="btn-filter"><span>❄️</span> صيفي</button>
-            </div>
-        </nav>
-
-        <main class="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 pb-20">
-            <div class="perfume-card winter rounded-3xl p-6 shadow-md border border-pink-50">
-                <img src="Design For Men/1 Million Lucky – Rabanne.jpg" class="w-full h-52 object-contain mb-4">
-                <h3 class="text-xl font-bold text-gray-800">1 Million Lucky</h3>
-                <p class="subtitle text-sm mb-2 font-bold">شتوي / خريفي</p>
-                <p class="text-gray-600 text-sm mb-4 leading-relaxed">عطر خشبي حلو ومميز بنوتات البندق والعسل.</p>
-                <div class="flex justify-between items-center pt-4 border-t border-pink-50">
-                    <span class="text-pink-600 font-bold">4.4 ⭐</span>
-                    <span class="tag">بندق - عسل</span>
-                </div>
-            </div>
-
-            <div class="perfume-card winter rounded-3xl p-6 shadow-md border border-pink-50">
-                <img src="Design For Men/Tom Ford Tobacco Vanille.jpg" class="w-full h-52 object-contain mb-4">
-                <h3 class="text-xl font-bold text-gray-800">Tobacco Vanille</h3>
-                <p class="subtitle text-sm mb-2 font-bold">شتوي - ثقيل</p>
-                <p class="text-gray-600 text-sm mb-4 leading-relaxed">فخامة التبغ الممزوج بالفانيليا والكاكاو.</p>
-                <div class="flex justify-between items-center pt-4 border-t border-pink-50">
-                    <span class="text-pink-600 font-bold">4.2 ⭐</span>
-                    <span class="tag">تبغ - فانيلا</span>
-                </div>
-            </div>
-
-            <div class="perfume-card summer rounded-3xl p-6 shadow-md border border-pink-50">
-                <img src="Design For Men/Acqua di Gio Profumo.jpg" class="w-full h-52 object-contain mb-4">
-                <h3 class="text-xl font-bold text-gray-800">Acqua di Giò Profumo</h3>
-                <p class="subtitle text-sm mb-2 font-bold">صيفي - منعش</p>
-                <p class="text-gray-600 text-sm mb-4 leading-relaxed">مزيج رائع من النوتات البحرية والبخور.</p>
-                <div class="flex justify-between items-center pt-4 border-t border-pink-50">
-                    <span class="text-pink-600 font-bold">4.4 ⭐</span>
-                    <span class="tag">بحري - بخور</span>
-                </div>
-            </div>
-
-            <div class="perfume-card summer rounded-3xl p-6 shadow-md border border-pink-50">
-                <img src="Design For Men/Dior Sauvage Eau de Parfum.jpg" class="w-full h-52 object-contain mb-4">
-                <h3 class="text-xl font-bold text-gray-800">Sauvage EDP</h3>
-                <p class="subtitle text-sm mb-2 font-bold">صيفي / طوال العام</p>
-                <p class="text-gray-600 text-sm mb-4 leading-relaxed">عطر كلاسيكي جذاب يجمع بين الانتعاش والدفء.</p>
-                <div class="flex justify-between items-center pt-4 border-t border-pink-50">
-                    <span class="text-pink-600 font-bold">4.2 ⭐</span>
-                    <span class="tag">برغموت - فانيلا</span>
-                </div>
-            </div>
-
-            <div class="perfume-card summer rounded-3xl p-6 shadow-md border border-pink-50">
-                <img src="Design For Men/Bleu de Chanel Eau de Parfum.jpg" class="w-full h-52 object-contain mb-4">
-                <h3 class="text-xl font-bold text-gray-800">Bleu de Chanel</h3>
-                <p class="subtitle text-sm mb-2 font-bold">صيفي - نظيف</p>
-                <p class="text-gray-600 text-sm mb-4 leading-relaxed">أيقونة العطور الخشبية النظيفة والرسمية.</p>
-                <div class="flex justify-between items-center pt-4 border-t border-pink-50">
-                    <span class="text-pink-600 font-bold">4.4 ⭐</span>
-                    <span class="tag">حمضيات - أخشاب</span>
-                </div>
-            </div>
-
-            <div class="perfume-card winter rounded-3xl p-6 shadow-md border border-pink-50">
-                <img src="Design For Men/Versace Eros.jpg" class="w-full h-52 object-contain mb-4">
-                <h3 class="text-xl font-bold text-gray-800">Versace Eros</h3>
-                <p class="subtitle text-sm mb-2 font-bold">شتوي - ليلي</p>
-                <p class="text-gray-600 text-sm mb-4 leading-relaxed">عطر القوة والجاذبية بنوتات النعناع والتفاح.</p>
-                <div class="flex justify-between items-center pt-4 border-t border-pink-50">
-                    <span class="text-pink-600 font-bold">4.1 ⭐</span>
-                    <span class="tag">نعناع - فانيلا</span>
-                </div>
-            </div>
+        <nav class="container mx-auto px-4 mb-16"><div class="flex overflow-x-auto md:justify-center gap-4 no-scrollbar"><button onclick="filterSelection('all', 'designerMenPage')" class="btn-filter active">All</button><button onclick="filterSelection('winter', 'designerMenPage')" class="btn-filter">Winter</button><button onclick="filterSelection('summer', 'designerMenPage')" class="btn-filter">Summer</button></div></nav>
+        <main class="container mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Men/1 Million Lucky – Rabanne.jpg" class="max-h-full object-contain"></div><span class="tag">Paco Rabanne</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">1 Million Lucky</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.4 ⭐</span><span>WINTER</span></div></div>
+            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Men/Tom Ford Tobacco Vanille.jpg" class="max-h-full object-contain"></div><span class="tag">Tom Ford</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Tobacco Vanille</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.2 ⭐</span><span>WINTER</span></div></div>
+            <div class="perfume-card summer"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Men/Acqua di Gio Profumo.jpg" class="max-h-full object-contain"></div><span class="tag">Armani</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Acqua di Gio</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.4 ⭐</span><span>SUMMER</span></div></div>
+            <div class="perfume-card summer"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Men/Dior Sauvage Eau de Parfum.jpg" class="max-h-full object-contain"></div><span class="tag">Dior</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Sauvage EDP</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.2 ⭐</span><span>SUMMER</span></div></div>
+            <div class="perfume-card summer"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Men/Bleu de Chanel Eau de Parfum.jpg" class="max-h-full object-contain"></div><span class="tag">Chanel</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Bleu de Chanel</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.4 ⭐</span><span>SUMMER</span></div></div>
+            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Men/Versace Eros.jpg" class="max-h-full object-contain"></div><span class="tag">Versace</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Versace Eros</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.1 ⭐</span><span>WINTER</span></div></div>
         </main>
     </div>
 
-    <div id="womenPage" class="hidden women-theme">
-        <header class="bg-white py-6 md:py-8 mb-6 shadow-sm relative border-b-2 border-rose-50">
-            <button onclick="goBack()" class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-rose-300 hover:text-rose-600 font-bold">← عودة</button>
-            <div class="container mx-auto text-center px-12">
-                <h1 class="text-xl md:text-3xl font-bold text-rose-600 uppercase tracking-wider">Design women perfumes</h1>
-                <p class="text-rose-400 text-xs md:text-sm mt-2 font-medium">تصنيف حسب الفصول</p>
-            </div>
+    <div id="designerWomenPage" class="hidden min-h-screen pb-20">
+        <header class="bg-white py-14 mb-8 text-center border-b border-gray-50 relative">
+            <button onclick="goBackToGender()" class="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 text-gray-300 hover:text-black uppercase text-[10px]">BACK</button>
+            <h1 class="text-xl md:text-2xl font-light tracking-[0.4em] uppercase">Designer | Women</h1>
         </header>
-
-        <nav class="container mx-auto px-4 mb-12">
-            <div class="flex overflow-x-auto md:justify-center gap-4 p-4 bg-white/50 rounded-3xl border border-rose-100 max-w-2xl mx-auto no-scrollbar">
-                <button onclick="filterSelection('all', 'womenPage')" class="btn-filter active">الكل</button>
-                <button onclick="filterSelection('winter', 'womenPage')" class="btn-filter"><span>❤️</span> شتوي</button>
-                <button onclick="filterSelection('summer', 'womenPage')" class="btn-filter"><span>❄️</span> صيفي</button>
-            </div>
-        </nav>
-
-        <main class="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 pb-20">
-            
-            <div class="perfume-card winter rounded-3xl p-6 shadow-md border border-rose-50">
-                <img src="Design For Women/Burberry Her Elixir de Parfum.jpg" class="w-full h-52 object-contain mb-4">
-                <h3 class="text-xl font-bold text-gray-800">Her Elixir</h3>
-                <p class="subtitle text-sm mb-2 font-bold">شتوي - كريمي</p>
-                <p class="text-gray-600 text-sm mb-4 leading-relaxed">عطر فاكهي زهري حلو ومكثف بنوتات التوت العليق والأخشاب الدافئة.</p>
-                <div class="flex justify-between items-center pt-4 border-t border-rose-50">
-                    <span class="text-rose-600 font-bold">4.6 ⭐</span>
-                    <span class="tag">توت - أخشاب</span>
-                </div>
-            </div>
-
-            <div class="perfume-card winter rounded-3xl p-6 shadow-md border border-rose-50">
-                <img src="Design For Women/Tom Ford Lost Cherry.jpg" class="w-full h-52 object-contain mb-4">
-                <h3 class="text-xl font-bold text-gray-800">Lost Cherry</h3>
-                <p class="subtitle text-sm mb-2 font-bold">شتوي - دافئ</p>
-                <p class="text-gray-600 text-sm mb-4 leading-relaxed">عطر دافئ وجذاب برائحة الكرز الداكن واللوز المر.</p>
-                <div class="flex justify-between items-center pt-4 border-t border-rose-50">
-                    <span class="text-rose-600 font-bold">4.3 ⭐</span>
-                    <span class="tag">كرز - لوز</span>
-                </div>
-            </div>
-
-            <div class="perfume-card winter rounded-3xl p-6 shadow-md border border-rose-50">
-                <img src="Design For Women/Prada Paradoxe Intense.jpg" class="w-full h-52 object-contain mb-4">
-                <h3 class="text-xl font-bold text-gray-800">Paradoxe Intense</h3>
-                <p class="subtitle text-sm mb-2 font-bold">شتوي - قوي</p>
-                <p class="text-gray-600 text-sm mb-4 leading-relaxed">عطر زهري شرقي مكثف يجمع بين الانتعاش والجرأة.</p>
-                <div class="flex justify-between items-center pt-4 border-t border-rose-50">
-                    <span class="text-rose-600 font-bold">4.5 ⭐</span>
-                    <span class="tag">زهري - شرقي</span>
-                </div>
-            </div>
-
-            <div class="perfume-card winter rounded-3xl p-6 shadow-md border border-rose-50">
-                <img src="Design For Women/Guerlain Tabac Sahara.jpg" class="w-full h-52 object-contain mb-4">
-                <h3 class="text-xl font-bold text-gray-800">Tabac Sahara</h3>
-                <p class="subtitle text-sm mb-2 font-bold">شتوي - ثقيل</p>
-                <p class="text-gray-600 text-sm mb-4 leading-relaxed">عطر خشبي شرقي غني بنوتات التبغ الدافئة والعود الفاخر.</p>
-                <div class="flex justify-between items-center pt-4 border-t border-rose-50">
-                    <span class="text-rose-600 font-bold">4.4 ⭐</span>
-                    <span class="tag">تبغ - عود</span>
-                </div>
-            </div>
-
-            <div class="perfume-card summer rounded-3xl p-6 shadow-md border border-rose-50">
-                <img src="Design For Women/Gucci Flora Gorgeous Gardenia.jpg" class="w-full h-52 object-contain mb-4">
-                <h3 class="text-xl font-bold text-gray-800">Gorgeous Gardenia</h3>
-                <p class="subtitle text-sm mb-2 font-bold">صيفي - ناعم</p>
-                <p class="text-gray-600 text-sm mb-4 leading-relaxed">عطر زهري منعش ولطيف بنوتات الغاردينيا الساحرة والتوت الأحمر.</p>
-                <div class="flex justify-between items-center pt-4 border-t border-rose-50">
-                    <span class="text-rose-600 font-bold">4.2 ⭐</span>
-                    <span class="tag">غاردينيا - توت</span>
-                </div>
-            </div>
-
-            <div class="perfume-card summer rounded-3xl p-6 shadow-md border border-rose-50">
-                <img src="Design For Women/Versace Crystal Noir (For Women).jpg" class="w-full h-52 object-contain mb-4">
-                <h3 class="text-xl font-bold text-gray-800">Crystal Noir</h3>
-                <p class="subtitle text-sm mb-2 font-bold">صيفي / طوال العام</p>
-                <p class="text-gray-600 text-sm mb-4 leading-relaxed">عطر جذاب وغامض بنوتات الغاردينيا السوداء والأخشاب الدافئة.</p>
-                <div class="flex justify-between items-center pt-4 border-t border-rose-50">
-                    <span class="text-rose-600 font-bold">4.1 ⭐</span>
-                    <span class="tag">غاردينيا - أخشاب</span>
-                </div>
-            </div>
-
+        <main class="container mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Women/Burberry Her Elixir de Parfum.jpg" class="max-h-full object-contain"></div><span class="tag">Burberry</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Her Elixir</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.6 ⭐</span><span>WINTER</span></div></div>
+            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Women/Tom Ford Lost Cherry.jpg" class="max-h-full object-contain"></div><span class="tag">Tom Ford</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Lost Cherry</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.3 ⭐</span><span>WINTER</span></div></div>
+            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Women/Prada Paradoxe Intense.jpg" class="max-h-full object-contain"></div><span class="tag">Prada</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Paradoxe Intense</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.5 ⭐</span><span>WINTER</span></div></div>
+            <div class="perfume-card summer"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Women/Gucci Flora Gorgeous Gardenia.jpg" class="max-h-full object-contain"></div><span class="tag">Gucci</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Gorgeous Gardenia</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.2 ⭐</span><span>SUMMER</span></div></div>
+            <div class="perfume-card summer"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Women/Versace Crystal Noir (For Women).jpg" class="max-h-full object-contain"></div><span class="tag">Versace</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Crystal Noir</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.1 ⭐</span><span>SUMMER</span></div></div>
         </main>
     </div>
+
+    <div id="nicheMenPage" class="hidden min-h-screen pb-20">
+        <header class="bg-white py-14 mb-8 text-center border-b border-gray-50 relative">
+            <button onclick="goBackToGender()" class="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 text-gray-300 hover:text-black uppercase text-[10px]">BACK</button>
+            <h1 class="text-xl md:text-2xl font-light tracking-[0.4em] uppercase">Niche | Men</h1>
+        </header>
+        <main class="container mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+            <div class="perfume-card summer"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Niche Man/Aventus - Creed.jpg" class="max-h-full object-contain"></div><span class="tag">Creed</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Aventus</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.3 ⭐</span><span>SUMMER</span></div></div>
+            <div class="perfume-card summer"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Niche Man/Reflection Man - Amouage.jpg" class="max-h-full object-contain"></div><span class="tag">Amouage</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Reflection Man</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.4 ⭐</span><span>SUMMER</span></div></div>
+            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Niche Man/Layton Exclusif - Parfums de Marly.jpg" class="max-h-full object-contain"></div><span class="tag">PDM</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Layton Exclusif</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.3 ⭐</span><span>WINTER</span></div></div>
+            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Niche Man/Black Afgano - Nasomatto.jpg" class="max-h-full object-contain"></div><span class="tag">Nasomatto</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Black Afgano</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.1 ⭐</span><span>WINTER</span></div></div>
+            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Niche Man/African Leather - Memo Paris.jpg" class="max-h-full object-contain"></div><span class="tag">Memo Paris</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">African Leather</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.3 ⭐</span><span>WINTER</span></div></div>
+            <div class="perfume-card summer"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Niche Man/Torino21 - Xerjoff.jpg" class="max-h-full object-contain"></div><span class="tag">Xerjoff</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Torino21</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.5 ⭐</span><span>SUMMER</span></div></div>
+        </main>
+    </div>
+
+    <div id="nicheWomenPage" class="hidden min-h-screen pb-20">
+        <header class="bg-white py-14 mb-8 text-center border-b border-gray-50 relative">
+            <button onclick="goBackToGender()" class="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 text-gray-300 hover:text-black uppercase text-[10px]">BACK</button>
+            <h1 class="text-xl md:text-2xl font-light tracking-[0.4em] uppercase">Niche | Women</h1>
+        </header>
+        <main class="container mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Women/Baccarat Rouge 540 Extrait de Parfum.jpg" class="max-h-full object-contain"></div><span class="tag">MFK</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Baccarat Rouge 540</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.2 ⭐</span><span>WINTER</span></div></div>
+            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Black Saffron Absolu - Byredo.jpg" class="max-h-full object-contain"></div><span class="tag">Byredo</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Black Saffron</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.1 ⭐</span><span>WINTER</span></div></div>
+            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Women/Guerlain Tabac Sahara.jpg" class="max-h-full object-contain"></div><span class="tag">Guerlain</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Tabac Sahara</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.4 ⭐</span><span>WINTER</span></div></div>
+        </main>
+    </div>
+
+    <div id="supplyChainPage" class="hidden min-h-screen pb-32">
+        <header class="bg-white py-16 mb-12 text-center border-b border-gray-50 relative">
+            <button onclick="goBackToFirst()" class="absolute left-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black uppercase text-[10px] tracking-widest">← Return</button>
+            <h1 class="text-3xl font-light tracking-[0.5em] uppercase mb-4">Supply Chain Portal</h1>
+            <p class="text-gray-400 text-xs tracking-widest uppercase">Official Egyptian Partners</p>
+        </header>
+
+        <main class="container mx-auto px-6 max-w-6xl">
+            <h2 class="text-xl font-light tracking-[0.4em] uppercase text-center mb-12 border-b pb-6">Premium Essential Oil Suppliers</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-24">
+                <div class="supplier-card"><h3>LISHA Essential Oils</h3><p class="text-gray-500 text-[11px] mt-2">📍 Cairo, Egypt • 📞 +20 100 000 0000</p><a href="https://lishaessentialoils.com/" target="_blank" class="text-accent-gold text-[10px] mt-4 uppercase inline-block border-b border-accent-gold">Visit Website</a></div>
+                <div class="supplier-card"><h3>Egypt Aromatic</h3><p class="text-gray-500 text-[11px] mt-2">📍 Industrial Zone, 6th of October • 📞 +20 2 0000 0000</p><a href="https://egyptaromatic.com/" target="_blank" class="text-accent-gold text-[10px] mt-4 uppercase inline-block border-b border-accent-gold">Visit Website</a></div>
+                <div class="supplier-card"><h3>Namaa (NFF)</h3><p class="text-gray-500 text-[11px] mt-2">📍 Badr City Industrial Zone • 📞 +20 122 000 0000</p><a href="https://www.namaa-ff.com/" target="_blank" class="text-accent-gold text-[10px] mt-4 uppercase inline-block border-b border-accent-gold">Visit Website</a></div>
+                <div class="supplier-card"><h3>MUSK Aromatics</h3><p class="text-gray-500 text-[11px] mt-2">📍 Heliopolis, Cairo • 📞 +20 111 000 0000</p><a href="https://www.musk-egypt.com/" target="_blank" class="text-accent-gold text-[10px] mt-4 uppercase inline-block border-b border-accent-gold">Visit Website</a></div>
+                <div class="supplier-card"><h3>VedaOils Egypt</h3><p class="text-gray-500 text-[11px] mt-2">📍 Obour City • 📞 +20 106 000 0000</p><a href="https://www.vedaoils.com/" target="_blank" class="text-accent-gold text-[10px] mt-4 uppercase inline-block border-b border-accent-gold">Visit Website</a></div>
+                <div class="supplier-card"><h3>Purity Egypt</h3><p class="text-gray-500 text-[11px] mt-2">📍 New Cairo • 📞 Contact via LinkedIn</p><a href="https://eg.linkedin.com/company/purityegypt" target="_blank" class="text-accent-gold text-[10px] mt-4 uppercase inline-block border-b border-accent-gold">LinkedIn Profile</a></div>
+                <div class="supplier-card"><h3>BM Aroma</h3><p class="text-gray-500 text-[11px] mt-2">📍 Alexandria, Borg El Arab • 📞 +20 155 000 0000</p><a href="https://bmaroma.co/ar" target="_blank" class="text-accent-gold text-[10px] mt-4 uppercase inline-block border-b border-accent-gold">Visit Website</a></div>
+                <div class="supplier-card"><h3>Afaq Essential Oils</h3><p class="text-gray-500 text-[11px] mt-2">📍 Nasr City, Cairo • 📞 +20 102 000 0000</p><a href="https://afaqfragrances.com/" target="_blank" class="text-accent-gold text-[10px] mt-4 uppercase inline-block border-b border-accent-gold">Visit Website</a></div>
+            </div>
+
+            <h2 class="text-xl font-light tracking-[0.4em] uppercase text-center mb-12 border-b pb-6">Glass & Packaging Partners</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
+                <div class="supplier-card border-r-2 border-r-blue-400"><h3>Marmar Glass</h3><p class="text-gray-500 text-[11px] mt-2">📍 Al-Gamaa District, Cairo • 📞 +20 100 601 2345</p></div>
+                <div class="supplier-card border-r-2 border-r-blue-400"><h3>Egypt Packaging</h3><p class="text-gray-500 text-[11px] mt-2">📍 6th of October • 📞 +20 2 3833 1234</p></div>
+                <div class="supplier-card border-r-2 border-r-blue-400"><h3>International Glass</h3><p class="text-gray-500 text-[11px] mt-2">📍 10th of Ramadan • 📞 +20 15 555 9991</p></div>
+            </div>
+
+            <h2 class="text-xl font-light tracking-[0.4em] uppercase text-center mb-12 border-b pb-6">3. Bottle Design Concepts (Unisex)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mt-16" id="bottleGallery">
+    
+    <div class="bottle-card">
+        <div class="h-64 mb-6 bg-[#f9f9f9] flex items-center justify-center p-4">
+            <img src="Glass 3.png" alt="Concept 01 - The Minimalist Cylinder" class="max-h-full object-contain">
+        </div>
+        <span class="tag">Concept 01</span>
+        <h3 class="text-sm font-bold tracking-widest uppercase mb-4">The Minimalist Cylinder</h3>
+        <p class="text-gray-400 text-[10px] leading-relaxed uppercase">Luxury Cylindrical Glass. base سميك يعطي ثقلاً وفخامة للجنسين (Unisex).</p>
+    </div>
+
+    <div class="bottle-card">
+        <div class="h-64 mb-6 bg-[#f9f9f9] flex items-center justify-center p-4">
+            <img src="Glass 1.png" alt="Concept 02 - The Royal Cube" class="max-h-full object-contain">
+        </div>
+        <span class="tag">Concept 02</span>
+        <h3 class="text-sm font-bold tracking-widest uppercase mb-4">The Royal Cube</h3>
+        <p class="text-gray-400 text-[10px] leading-relaxed uppercase">Architecture-inspired glass cube. زجاج سميك مع حواف حادة ومشطوفة لبراندات النيش الفاخرة.</p>
+    </div>
+
+    <div class="bottle-card">
+        <div class="h-64 mb-6 bg-[#f9f9f9] flex items-center justify-center p-4">
+            <img src="Glass 2.png" alt="Concept 03 - The Matte Horizon" class="max-h-full object-contain">
+        </div>
+        <span class="tag">Concept 03</span>
+        <h3 class="text-sm font-bold tracking-widest uppercase mb-4">The Matte Horizon</h3>
+        <p class="text-gray-400 text-[10px] leading-relaxed uppercase">White Frosted Matte Glass. تصميم نظيف وعصري يعتمد على ملمس الزجاج المطفى الموحد.</p>
+    </div>
+
+</div>
+        </main>
+    </div>
+
+    <footer class="py-10 text-center">
+        <button onclick="showSupplyChain()" class="text-[9px] tracking-[0.4em] text-gray-400 hover:text-accent-gold transition uppercase">For Partners | Supply Chain Portal</button>
+        <p class="text-[8px] text-gray-200 mt-4 uppercase">© 2026 Ahmed Perfumes Boutique</p>
+    </footer>
 
     <script>
-        function showPage(pageId) {
-            document.getElementById('welcomeScreen').classList.add('hidden');
-            document.getElementById('menPage').classList.add('hidden');
-            document.getElementById('womenPage').classList.add('hidden');
-            document.getElementById(pageId).classList.remove('hidden');
-            window.scrollTo(0, 0);
+        let currentCategory = ''; 
+
+        function showCategory(cat) {
+            currentCategory = cat;
+            document.getElementById('firstChoice').classList.add('hidden');
+            document.getElementById('genderChoice').classList.remove('hidden');
         }
 
-        function goBack() {
-            document.getElementById('menPage').classList.add('hidden');
-            document.getElementById('womenPage').classList.add('hidden');
-            document.getElementById('welcomeScreen').classList.remove('hidden');
+        function animateCards(pageId) {
+            const page = document.getElementById(pageId);
+            const cards = page.querySelectorAll('.perfume-card, .bottle-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = "1";
+                    card.style.transform = "translateY(0)";
+                }, index * 120);
+            });
+        }
+
+        function openPerfumePage(gender) {
+            document.getElementById('genderChoice').classList.add('hidden');
+            let pageId = "";
+            if (currentCategory === 'Niche') {
+                pageId = (gender === 'Men') ? 'nicheMenPage' : 'nicheWomenPage';
+            } else {
+                pageId = (gender === 'Men') ? 'designerMenPage' : 'designerWomenPage';
+            }
+            document.getElementById(pageId).classList.remove('hidden');
+            window.scrollTo(0, 0);
+            setTimeout(() => { animateCards(pageId); }, 200);
+        }
+
+        function showSupplyChain() {
+            const ids = ['firstChoice', 'genderChoice', 'designerMenPage', 'designerWomenPage', 'nicheMenPage', 'nicheWomenPage'];
+            ids.forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById('supplyChainPage').classList.remove('hidden');
+            window.scrollTo(0, 0);
+            setTimeout(() => { animateCards('supplyChainPage'); }, 200);
+        }
+
+        function goBackToFirst() {
+            document.getElementById('genderChoice').classList.add('hidden');
+            document.getElementById('supplyChainPage').classList.add('hidden');
+            document.getElementById('firstChoice').classList.remove('hidden');
+        }
+
+        function goBackToGender() {
+            const ids = ['designerMenPage', 'designerWomenPage', 'nicheMenPage', 'nicheWomenPage'];
+            ids.forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+                document.querySelectorAll('#' + id + ' .perfume-card').forEach(c => { c.style.opacity = "0"; c.style.transform = "translateY(40px)"; });
+            });
+            document.getElementById('genderChoice').classList.remove('hidden');
         }
 
         function filterSelection(c, pageId) {
-            let pageContext = document.getElementById(pageId);
-            let x = pageContext.getElementsByClassName("perfume-card");
+            let x = document.getElementById(pageId).getElementsByClassName("perfume-card");
             for (let i = 0; i < x.length; i++) {
-                if (c == "all") {
-                    x[i].style.display = "block";
-                } else {
-                    x[i].style.display = "none";
-                    if (x[i].classList.contains(c)) {
-                        x[i].style.display = "block";
-                    }
-                }
+                x[i].style.opacity = "0"; x[i].style.transform = "translateY(40px)";
+                x[i].style.display = (c == "all" || x[i].classList.contains(c)) ? "flex" : "none";
             }
-            let btns = pageContext.getElementsByClassName("btn-filter");
-            for (let j = 0; j < btns.length; j++) {
-                btns[j].classList.remove("active");
-            }
+            setTimeout(() => { animateCards(pageId); }, 100);
+            let btns = document.getElementById(pageId).getElementsByClassName("btn-filter");
+            for (let b of btns) b.classList.remove("active");
             event.currentTarget.classList.add("active");
         }
     </script>
-
 </body>
 </html>
