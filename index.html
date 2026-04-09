@@ -3,313 +3,382 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ahmed Perfumes | Luxury Boutique & Supply Chain</title>
+    <title>Ahmed Perfumes | Ultra Luxury Experience</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-black: #0a0a0a;
             --accent-gold: #c5a059;
             --soft-ivory: #fcfcfc;
-            --border-muted: #e5e5e5;
         }
 
+        /* 🚀 GPU Acceleration for Smoothness */
+        * { backface-visibility: hidden; -webkit-font-smoothing: antialiased; }
+        
         body { 
             font-family: 'Cairo', sans-serif; 
-            background-color: var(--soft-ivory); 
-            color: var(--primary-black);
-            margin: 0;
-            overflow-x: hidden;
+            background: #ffffff;
+            color: var(--primary-black); 
+            margin: 0; overflow-x: hidden;
         }
 
-        /* ===== ✨ Animations ===== */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 0.8s ease forwards;
+        h1, h2, .luxury-font { font-family: 'Playfair Display', serif; }
+
+        /* ✨ Smooth Page Transitions */
+        .page-node {
+            position: fixed; inset: 0; width: 100%; height: 100%;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0; visibility: hidden; z-index: 10;
+            overflow-y: auto; will-change: transform, opacity;
+            background: white;
         }
+        .page-node.active { opacity: 1; visibility: visible; z-index: 20; transform: scale(1); }
+        .page-node.exit { opacity: 0; transform: scale(1.02); }
 
-        @keyframes fadeUp {
-            to { opacity: 1; transform: translateY(0); }
+        /* ✨ Optimized Cards */
+        .perfume-card { 
+            background: white; transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+            padding: 25px; position: relative; border: 1px solid #f5f5f5;
+            will-change: transform;
         }
+        .perfume-card:hover { transform: translateY(-8px); border-color: var(--accent-gold); box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
 
-        .selection-screen {
-            display: flex; height: 100vh; width: 100%; position: fixed;
-            top: 0; left: 0; z-index: 1000; background: white;
-            transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1);
-            flex-direction: column;
+        /* ✨ UI Elements */
+        .side-panel { 
+            position: fixed; top: 0; right: -100%; width: 400px; height: 100%; 
+            z-index: 4800; transition: right 0.5s cubic-bezier(0.19, 1, 0.22, 1); 
+            background: white; box-shadow: -10px 0 50px rgba(0,0,0,0.1); 
+            will-change: right;
         }
-        @media (min-width: 768px) { .selection-screen { flex-direction: row; } }
+        .side-panel.open { right: 0; }
 
-        .select-box {
-            flex: 1; display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            transition: 0.5s ease; cursor: pointer; position: relative; padding: 40px;
-            text-align: center; border: 1px solid #f1f1f1;
+        .toast-box { position: fixed; bottom: 20px; left: 20px; z-index: 9999; }
+        .toast { background: black; color: white; padding: 12px 20px; margin-top: 10px; font-size: 11px; border-radius: 2px; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+
+        .modal { 
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); 
+            background: white; z-index: 5000; opacity: 0; pointer-events: none; 
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
-        .select-box:hover { background-color: #fff; transform: scale(1.02); z-index: 10; }
-        @media (min-width: 768px) { .select-box:hover { flex: 1.4; } }
+        .modal-open { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: all; }
 
-        .select-box h2 { font-size: 1.6rem; font-weight: 200; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 15px; }
-        @media (min-width: 768px) { .select-box h2 { font-size: 2.5rem; } }
-
-        /* كروت العطور والزجاجات */
-        .perfume-card, .bottle-card { 
-            background: white; border: 1px solid transparent; transition: 0.5s ease; 
-            display: flex; flex-direction: column; padding: 30px; height: 100%;
-            opacity: 0; transform: translateY(40px);
-        }
-        .perfume-card:hover, .bottle-card:hover { 
-            border-color: var(--accent-gold); 
-            box-shadow: 0 25px 60px rgba(197,160,89,0.25);
-            transform: translateY(-8px);
-        }
-        .perfume-card img, .bottle-card img { transition: transform 0.5s ease; }
-        .perfume-card:hover img, .bottle-card:hover img { transform: scale(1.1); }
-
-        .bg-lux-white { background-color: #ffffff; }
-        .bg-lux-black { background-color: #0c0c0c; color: white; }
-        .select-men { background-color: #fafafa; }
-        .select-women { background-color: #fffbfc; }
-
-        .btn-filter {
-            border-radius: 0px; padding: 8px 30px; font-weight: 400;
-            transition: 0.4s; border: 1px solid var(--border-muted);
-            background-color: transparent; color: #888;
-            text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem;
-            white-space: nowrap;
-        }
-        .active { background-color: var(--primary-black) !important; color: white !important; border-color: var(--primary-black) !important; }
-
-        .tag { font-size: 0.6rem; letter-spacing: 2px; color: var(--accent-gold); text-transform: uppercase; font-weight: 700; margin-bottom: 8px; display: block; }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 4500; display: none; opacity: 0; transition: opacity 0.4s; }
         
-        /* كروت الموردين */
-        .supplier-card { border-left: 3px solid var(--accent-gold); padding: 2rem; background: white; transition: 0.4s ease; height: 100%; display: flex; flex-direction: column; }
-        .supplier-card:hover { box-shadow: 0 15px 40px rgba(0,0,0,0.05); border-left-width: 8px; }
+        .btn-lux { background: black; color: white; padding: 14px 30px; text-transform: uppercase; letter-spacing: 2px; font-size: 10px; transition: 0.3s; border: none; cursor: pointer; }
+        .btn-lux:hover { background: var(--accent-gold); }
 
         .hidden { display: none !important; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        footer { border-top: 1px solid var(--border-muted); background: white; }
     </style>
 </head>
-<body>
+<body onload="App.init()">
 
-    <div id="firstChoice" class="selection-screen">
-        <div class="absolute top-12 w-full text-center z-20 fade-in">
-            <h1 class="text-xs md:text-sm font-light tracking-[0.6em] text-gray-400 uppercase">Ahmed Perfumes | Private Selection</h1>
-        </div>
-        <div class="select-box bg-lux-white" onclick="showCategory('Designer')">
-            <h2 class="text-gray-800">Designer</h2>
-            <p class="text-gray-400 text-[10px] tracking-[0.3em] uppercase mt-2 font-bold">The Global Selection</p>
-        </div>
-        <div class="select-box bg-lux-black" onclick="showCategory('Niche')">
-            <h2 class="text-white">Niche</h2>
-            <p class="text-gray-600 text-[10px] tracking-[0.3em] uppercase mt-2 font-bold">Rare Masterpieces</p>
-        </div>
+    <div id="loader" class="fixed inset-0 bg-black z-[9999] flex justify-center items-center transition-opacity duration-700">
+        <h2 class="text-white tracking-[12px] font-light text-xl animate-pulse uppercase">Perfumes</h2>
     </div>
-
-    <div id="genderChoice" class="selection-screen hidden">
-        <button onclick="goBackToFirst()" class="absolute top-8 left-8 z-30 text-gray-400 hover:text-black transition tracking-widest text-[10px] uppercase border-b border-gray-100 pb-2">← Back to Menu</button>
-        <div class="select-box select-men" onclick="openPerfumePage('Men')">
-            <h2 class="text-gray-800">Gentlemen</h2>
-            <p id="genderSubtitleMen" class="text-gray-400 text-[10px] tracking-[0.3em] uppercase font-bold">Collection</p>
-        </div>
-        <div class="select-box select-women" onclick="openPerfumePage('Women')">
-            <h2 class="text-gray-800">Ladies</h2>
-            <p id="genderSubtitleWomen" class="text-gray-400 text-[10px] tracking-[0.3em] uppercase font-bold">Collection</p>
-        </div>
-    </div>
-
-    <div id="designerMenPage" class="hidden min-h-screen pb-20">
-        <header class="bg-white py-14 mb-8 text-center border-b border-gray-50 relative">
-            <button onclick="goBackToGender()" class="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 text-gray-300 hover:text-black uppercase text-[10px]">BACK</button>
-            <h1 class="text-xl md:text-2xl font-light tracking-[0.4em] uppercase">Designer | Men</h1>
-        </header>
-        <nav class="container mx-auto px-4 mb-16"><div class="flex overflow-x-auto md:justify-center gap-4 no-scrollbar"><button onclick="filterSelection('all', 'designerMenPage')" class="btn-filter active">All</button><button onclick="filterSelection('winter', 'designerMenPage')" class="btn-filter">Winter</button><button onclick="filterSelection('summer', 'designerMenPage')" class="btn-filter">Summer</button></div></nav>
-        <main class="container mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
-            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Men/1 Million Lucky – Rabanne.jpg" class="max-h-full object-contain"></div><span class="tag">Paco Rabanne</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">1 Million Lucky</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.4 ⭐</span><span>WINTER</span></div></div>
-            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Men/Tom Ford Tobacco Vanille.jpg" class="max-h-full object-contain"></div><span class="tag">Tom Ford</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Tobacco Vanille</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.2 ⭐</span><span>WINTER</span></div></div>
-            <div class="perfume-card summer"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Men/Acqua di Gio Profumo.jpg" class="max-h-full object-contain"></div><span class="tag">Armani</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Acqua di Gio</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.4 ⭐</span><span>SUMMER</span></div></div>
-            <div class="perfume-card summer"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Men/Dior Sauvage Eau de Parfum.jpg" class="max-h-full object-contain"></div><span class="tag">Dior</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Sauvage EDP</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.2 ⭐</span><span>SUMMER</span></div></div>
-            <div class="perfume-card summer"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Men/Bleu de Chanel Eau de Parfum.jpg" class="max-h-full object-contain"></div><span class="tag">Chanel</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Bleu de Chanel</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.4 ⭐</span><span>SUMMER</span></div></div>
-            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Men/Versace Eros.jpg" class="max-h-full object-contain"></div><span class="tag">Versace</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Versace Eros</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.1 ⭐</span><span>WINTER</span></div></div>
-        </main>
-    </div>
-
-    <div id="designerWomenPage" class="hidden min-h-screen pb-20">
-        <header class="bg-white py-14 mb-8 text-center border-b border-gray-50 relative">
-            <button onclick="goBackToGender()" class="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 text-gray-300 hover:text-black uppercase text-[10px]">BACK</button>
-            <h1 class="text-xl md:text-2xl font-light tracking-[0.4em] uppercase">Designer | Women</h1>
-        </header>
-        <main class="container mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
-            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Women/Burberry Her Elixir de Parfum.jpg" class="max-h-full object-contain"></div><span class="tag">Burberry</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Her Elixir</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.6 ⭐</span><span>WINTER</span></div></div>
-            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Women/Tom Ford Lost Cherry.jpg" class="max-h-full object-contain"></div><span class="tag">Tom Ford</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Lost Cherry</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.3 ⭐</span><span>WINTER</span></div></div>
-            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Women/Prada Paradoxe Intense.jpg" class="max-h-full object-contain"></div><span class="tag">Prada</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Paradoxe Intense</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.5 ⭐</span><span>WINTER</span></div></div>
-            <div class="perfume-card summer"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Women/Gucci Flora Gorgeous Gardenia.jpg" class="max-h-full object-contain"></div><span class="tag">Gucci</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Gorgeous Gardenia</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.2 ⭐</span><span>SUMMER</span></div></div>
-            <div class="perfume-card summer"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Women/Versace Crystal Noir (For Women).jpg" class="max-h-full object-contain"></div><span class="tag">Versace</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Crystal Noir</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.1 ⭐</span><span>SUMMER</span></div></div>
-        </main>
-    </div>
-
-    <div id="nicheMenPage" class="hidden min-h-screen pb-20">
-        <header class="bg-white py-14 mb-8 text-center border-b border-gray-50 relative">
-            <button onclick="goBackToGender()" class="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 text-gray-300 hover:text-black uppercase text-[10px]">BACK</button>
-            <h1 class="text-xl md:text-2xl font-light tracking-[0.4em] uppercase">Niche | Men</h1>
-        </header>
-        <main class="container mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
-            <div class="perfume-card summer"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Niche Man/Aventus - Creed.jpg" class="max-h-full object-contain"></div><span class="tag">Creed</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Aventus</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.3 ⭐</span><span>SUMMER</span></div></div>
-            <div class="perfume-card summer"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Niche Man/Reflection Man - Amouage.jpg" class="max-h-full object-contain"></div><span class="tag">Amouage</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Reflection Man</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.4 ⭐</span><span>SUMMER</span></div></div>
-            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Niche Man/Layton Exclusif - Parfums de Marly.jpg" class="max-h-full object-contain"></div><span class="tag">PDM</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Layton Exclusif</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.3 ⭐</span><span>WINTER</span></div></div>
-            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Niche Man/Black Afgano - Nasomatto.jpg" class="max-h-full object-contain"></div><span class="tag">Nasomatto</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Black Afgano</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.1 ⭐</span><span>WINTER</span></div></div>
-            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Niche Man/African Leather - Memo Paris.jpg" class="max-h-full object-contain"></div><span class="tag">Memo Paris</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">African Leather</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.3 ⭐</span><span>WINTER</span></div></div>
-            <div class="perfume-card summer"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Niche Man/Torino21 - Xerjoff.jpg" class="max-h-full object-contain"></div><span class="tag">Xerjoff</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Torino21</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.5 ⭐</span><span>SUMMER</span></div></div>
-        </main>
-    </div>
-
-    <div id="nicheWomenPage" class="hidden min-h-screen pb-20">
-        <header class="bg-white py-14 mb-8 text-center border-b border-gray-50 relative">
-            <button onclick="goBackToGender()" class="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 text-gray-300 hover:text-black uppercase text-[10px]">BACK</button>
-            <h1 class="text-xl md:text-2xl font-light tracking-[0.4em] uppercase">Niche | Women</h1>
-        </header>
-        <main class="container mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
-            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Women/Baccarat Rouge 540 Extrait de Parfum.jpg" class="max-h-full object-contain"></div><span class="tag">MFK</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Baccarat Rouge 540</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.2 ⭐</span><span>WINTER</span></div></div>
-            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Black Saffron Absolu - Byredo.jpg" class="max-h-full object-contain"></div><span class="tag">Byredo</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Black Saffron</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.1 ⭐</span><span>WINTER</span></div></div>
-            <div class="perfume-card winter"><div class="h-72 mb-8 bg-[#fdfdfd] flex items-center justify-center p-6"><img src="Design For Women/Guerlain Tabac Sahara.jpg" class="max-h-full object-contain"></div><span class="tag">Guerlain</span><h3 class="text-sm font-bold mb-4 tracking-widest uppercase">Tabac Sahara</h3><div class="mt-auto flex justify-between items-center text-[9px] border-t pt-6"><span>4.4 ⭐</span><span>WINTER</span></div></div>
-        </main>
-    </div>
-
-    <div id="supplyChainPage" class="hidden min-h-screen pb-32">
-        <header class="bg-white py-16 mb-12 text-center border-b border-gray-50 relative">
-            <button onclick="goBackToFirst()" class="absolute left-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black uppercase text-[10px] tracking-widest">← Return</button>
-            <h1 class="text-3xl font-light tracking-[0.5em] uppercase mb-4">Supply Chain Portal</h1>
-            <p class="text-gray-400 text-xs tracking-widest uppercase">Official Egyptian Partners</p>
-        </header>
-
-        <main class="container mx-auto px-6 max-w-6xl">
-            <h2 class="text-xl font-light tracking-[0.4em] uppercase text-center mb-12 border-b pb-6">Premium Essential Oil Suppliers</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-24">
-                <div class="supplier-card"><h3>LISHA Essential Oils</h3><p class="text-gray-500 text-[11px] mt-2">📍 Cairo, Egypt • 📞 +20 100 000 0000</p><a href="https://lishaessentialoils.com/" target="_blank" class="text-accent-gold text-[10px] mt-4 uppercase inline-block border-b border-accent-gold">Visit Website</a></div>
-                <div class="supplier-card"><h3>Egypt Aromatic</h3><p class="text-gray-500 text-[11px] mt-2">📍 Industrial Zone, 6th of October • 📞 +20 2 0000 0000</p><a href="https://egyptaromatic.com/" target="_blank" class="text-accent-gold text-[10px] mt-4 uppercase inline-block border-b border-accent-gold">Visit Website</a></div>
-                <div class="supplier-card"><h3>Namaa (NFF)</h3><p class="text-gray-500 text-[11px] mt-2">📍 Badr City Industrial Zone • 📞 +20 122 000 0000</p><a href="https://www.namaa-ff.com/" target="_blank" class="text-accent-gold text-[10px] mt-4 uppercase inline-block border-b border-accent-gold">Visit Website</a></div>
-                <div class="supplier-card"><h3>MUSK Aromatics</h3><p class="text-gray-500 text-[11px] mt-2">📍 Heliopolis, Cairo • 📞 +20 111 000 0000</p><a href="https://www.musk-egypt.com/" target="_blank" class="text-accent-gold text-[10px] mt-4 uppercase inline-block border-b border-accent-gold">Visit Website</a></div>
-                <div class="supplier-card"><h3>VedaOils Egypt</h3><p class="text-gray-500 text-[11px] mt-2">📍 Obour City • 📞 +20 106 000 0000</p><a href="https://www.vedaoils.com/" target="_blank" class="text-accent-gold text-[10px] mt-4 uppercase inline-block border-b border-accent-gold">Visit Website</a></div>
-                <div class="supplier-card"><h3>Purity Egypt</h3><p class="text-gray-500 text-[11px] mt-2">📍 New Cairo • 📞 Contact via LinkedIn</p><a href="https://eg.linkedin.com/company/purityegypt" target="_blank" class="text-accent-gold text-[10px] mt-4 uppercase inline-block border-b border-accent-gold">LinkedIn Profile</a></div>
-                <div class="supplier-card"><h3>BM Aroma</h3><p class="text-gray-500 text-[11px] mt-2">📍 Alexandria, Borg El Arab • 📞 +20 155 000 0000</p><a href="https://bmaroma.co/ar" target="_blank" class="text-accent-gold text-[10px] mt-4 uppercase inline-block border-b border-accent-gold">Visit Website</a></div>
-                <div class="supplier-card"><h3>Afaq Essential Oils</h3><p class="text-gray-500 text-[11px] mt-2">📍 Nasr City, Cairo • 📞 +20 102 000 0000</p><a href="https://afaqfragrances.com/" target="_blank" class="text-accent-gold text-[10px] mt-4 uppercase inline-block border-b border-accent-gold">Visit Website</a></div>
-            </div>
-
-            <h2 class="text-xl font-light tracking-[0.4em] uppercase text-center mb-12 border-b pb-6">Glass & Packaging Partners</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
-                <div class="supplier-card border-r-2 border-r-blue-400"><h3>Marmar Glass</h3><p class="text-gray-500 text-[11px] mt-2">📍 Al-Gamaa District, Cairo • 📞 +20 100 601 2345</p></div>
-                <div class="supplier-card border-r-2 border-r-blue-400"><h3>Egypt Packaging</h3><p class="text-gray-500 text-[11px] mt-2">📍 6th of October • 📞 +20 2 3833 1234</p></div>
-                <div class="supplier-card border-r-2 border-r-blue-400"><h3>International Glass</h3><p class="text-gray-500 text-[11px] mt-2">📍 10th of Ramadan • 📞 +20 15 555 9991</p></div>
-            </div>
-
-            <h2 class="text-xl font-light tracking-[0.4em] uppercase text-center mb-12 border-b pb-6">3. Bottle Design Concepts (Unisex)</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mt-16" id="bottleGallery">
     
-    <div class="bottle-card">
-        <div class="h-64 mb-6 bg-[#f9f9f9] flex items-center justify-center p-4">
-            <img src="Glass 3.png" alt="Concept 01 - The Minimalist Cylinder" class="max-h-full object-contain">
+    <div id="overlay" class="overlay" onclick="App.closeAll()"></div>
+    <div id="toastBox" class="toast-box"></div>
+
+    <section id="page-hero" class="page-node active flex items-center justify-center">
+        <div class="absolute inset-0 bg-black">
+            <img src="https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&q=80&w=1920" class="w-full h-full object-cover opacity-60">
         </div>
-        <span class="tag">Concept 01</span>
-        <h3 class="text-sm font-bold tracking-widest uppercase mb-4">The Minimalist Cylinder</h3>
-        <p class="text-gray-400 text-[10px] leading-relaxed uppercase">Luxury Cylindrical Glass. base سميك يعطي ثقلاً وفخامة للجنسين (Unisex).</p>
-    </div>
-
-    <div class="bottle-card">
-        <div class="h-64 mb-6 bg-[#f9f9f9] flex items-center justify-center p-4">
-            <img src="Glass 1.png" alt="Concept 02 - The Royal Cube" class="max-h-full object-contain">
+        <div class="relative z-10 text-center text-white px-6">
+            <h1 class="text-5xl md:text-7xl mb-10 tracking-tight luxury-font">Luxury Defined.</h1>
+            <button onclick="App.navigate('page-category')" class="btn-lux border border-white/20 !bg-transparent hover:!bg-white hover:text-black transition-all">Explore Boutique</button>
         </div>
-        <span class="tag">Concept 02</span>
-        <h3 class="text-sm font-bold tracking-widest uppercase mb-4">The Royal Cube</h3>
-        <p class="text-gray-400 text-[10px] leading-relaxed uppercase">Architecture-inspired glass cube. زجاج سميك مع حواف حادة ومشطوفة لبراندات النيش الفاخرة.</p>
-    </div>
+    </section>
 
-    <div class="bottle-card">
-        <div class="h-64 mb-6 bg-[#f9f9f9] flex items-center justify-center p-4">
-            <img src="Glass 2.png" alt="Concept 03 - The Matte Horizon" class="max-h-full object-contain">
+    <section id="page-category" class="page-node flex flex-col md:flex-row">
+        <div class="flex-1 flex flex-col justify-center items-center cursor-pointer hover:bg-gray-50 transition-colors border-l" onclick="App.setCategory('Designer')">
+            <h2 class="text-4xl font-light tracking-widest luxury-font">DESIGNER</h2>
         </div>
-        <span class="tag">Concept 03</span>
-        <h3 class="text-sm font-bold tracking-widest uppercase mb-4">The Matte Horizon</h3>
-        <p class="text-gray-400 text-[10px] leading-relaxed uppercase">White Frosted Matte Glass. تصميم نظيف وعصري يعتمد على ملمس الزجاج المطفى الموحد.</p>
+        <div class="flex-1 bg-black text-white flex flex-col justify-center items-center cursor-pointer hover:bg-zinc-900 transition-colors border-l" onclick="App.setCategory('Niche')">
+            <h2 class="text-4xl font-light tracking-widest luxury-font">NICHE</h2>
+        </div>
+        <div class="flex-1 flex flex-col justify-center items-center cursor-pointer hover:bg-gray-50 transition-colors" onclick="App.setCategory('Arabic')">
+            <h2 class="text-3xl font-light tracking-[8px] text-center px-4 luxury-font">TOP ARABIC PERFUMES</h2>
+        </div>
+        <button onclick="App.navigate('page-hero')" class="absolute top-8 left-8 text-gray-400 text-xs uppercase tracking-widest">← Back</button>
+    </section>
+
+    <section id="page-gender" class="page-node flex flex-col md:flex-row">
+        <div class="flex-1 flex flex-col justify-center items-center cursor-pointer hover:bg-gray-50 transition" onclick="App.enterStore('Men')">
+            <h2 class="text-3xl font-light tracking-widest luxury-font">GENTLEMEN</h2>
+        </div>
+        <div class="flex-1 bg-gray-50 flex flex-col justify-center items-center cursor-pointer hover:bg-white transition border-r" onclick="App.enterStore('Women')">
+            <h2 class="text-3xl font-light tracking-widest luxury-font">LADIES</h2>
+        </div>
+        <button onclick="App.navigate('page-category')" class="absolute top-8 left-8 text-gray-400 text-xs uppercase tracking-widest">← Category</button>
+    </section>
+
+    <section id="page-store" class="page-node">
+        <header class="bg-white/90 backdrop-blur-md py-10 border-b text-center sticky top-0 z-50">
+            <h1 id="storeTitle" class="text-3xl font-light tracking-widest uppercase luxury-font">COLLECTION</h1>
+            <div class="mt-6 flex justify-center px-6">
+                <input type="text" id="search" oninput="App.filter()" placeholder="SEARCH SCENT..." class="border-b border-gray-200 py-2 w-full max-w-md text-center focus:border-black outline-none transition-all text-xs tracking-widest bg-transparent">
+            </div>
+            <button onclick="App.navigate('page-gender')" class="absolute left-8 top-1/2 -translate-y-1/2 text-gray-300 text-[10px] uppercase hover:text-black">BACK</button>
+        </header>
+        <main id="perfumeGrid" class="container mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 py-16"></main>
+    </section>
+
+    <div id="productModal" class="modal w-[95%] max-w-5xl h-[80vh] overflow-hidden grid grid-cols-1 md:grid-cols-2 shadow-2xl"></div>
+
+    <div id="checkoutModal" class="modal w-[90%] max-w-lg p-10 shadow-2xl">
+        <h2 class="text-2xl font-bold mb-8 luxury-font text-center uppercase">Checkout</h2>
+        <div id="checkoutSummary" class="mb-8 text-sm border-b pb-4"></div>
+        <form onsubmit="App.handleOrder(event)" class="space-y-4">
+            <input type="text" id="custName" placeholder="NAME" required class="w-full border-b py-2 focus:border-black outline-none transition-all">
+            <input type="tel" id="custPhone" placeholder="PHONE" required class="w-full border-b py-2 focus:border-black outline-none transition-all">
+            <textarea id="custAddr" placeholder="ADDRESS" required class="w-full border-b py-2 focus:border-black outline-none h-16"></textarea>
+            <button type="submit" class="w-full btn-lux mt-6">Confirm Order</button>
+        </form>
     </div>
 
-</div>
-        </main>
+    <div id="cartSidebar" class="side-panel">
+        <div class="p-10 flex flex-col h-full">
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="text-xl font-bold tracking-widest luxury-font">BAG</h2>
+                <button onclick="App.closeAll()" class="text-gray-300 hover:text-black">✕</button>
+            </div>
+            <div id="cartItems" class="space-y-6 overflow-y-auto no-scrollbar flex-grow"></div>
+            <div class="border-t pt-8 mt-6">
+                <div class="flex justify-between font-bold mb-6"><span>Total</span><span id="cartTotal">$0.00</span></div>
+                <button onclick="App.openCheckout()" class="w-full btn-lux">Checkout</button>
+            </div>
+        </div>
     </div>
 
-    <footer class="py-10 text-center">
-        <button onclick="showSupplyChain()" class="text-[9px] tracking-[0.4em] text-gray-400 hover:text-accent-gold transition uppercase">For Partners | Supply Chain Portal</button>
-        <p class="text-[8px] text-gray-200 mt-4 uppercase">© 2026 Ahmed Perfumes Boutique</p>
-    </footer>
+    <button onclick="App.togglePanel('cartSidebar')" class="fixed bottom-8 left-8 z-[100] bg-black text-white p-4 rounded-full shadow-2xl hover:scale-110 transition active:scale-95">
+        🛒 <span id="cartCount" class="absolute -top-1 -right-1 bg-[#c5a059] text-[9px] w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
+    </button>
 
     <script>
-        let currentCategory = ''; 
+        const App = {
+            database: [
+                // 🧔 Designer Men
+                { id: 1, name: "1 Million Lucky", brand: "Rabanne", cat: "Designer", gender: "Men", price: 120, img: "Design For Men/1 Million Lucky – Rabanne.jpg", notes: "Hazelnut, Honey" },
+                { id: 2, name: "Y Le Parfum", brand: "YSL", cat: "Designer", gender: "Men", price: 155, img: "Design For Men/Y Le Parfum – Yves Saint Laurent.jpg", notes: "Ginger, Sage" },
+                { id: 3, name: "Tobacco Vanille", brand: "Tom Ford", cat: "Designer", gender: "Men", price: 350, img: "Design For Men/Tom Ford Tobacco Vanille.jpg", notes: "Tobacco, Vanilla" },
+                { id: 4, name: "Sauvage EDP", brand: "Dior", cat: "Designer", gender: "Men", price: 145, img: "Design For Men/Dior Sauvage Eau de Parfum.jpg", notes: "Bergamot, Pepper" },
+                { id: 5, name: "Versace Eros", brand: "Versace", cat: "Designer", gender: "Men", price: 105, img: "Design For Men/Versace Eros.jpg", notes: "Mint, Candy Apple" },
+                { id: 6, name: "Bleu de Chanel", brand: "Chanel", cat: "Designer", gender: "Men", price: 160, img: "Design For Men/Bleu de Chanel Eau de Parfum.jpg", notes: "Incense, Cedar" },
+                { id: 7, name: "Acqua di Gio Profumo", brand: "Armani", cat: "Designer", gender: "Men", price: 135, img: "Design For Men/Acqua di Gio Profumo.jpg", notes: "Marine, Patchouli" },
+                { id: 8, name: "The One Intense", brand: "D&G", cat: "Designer", gender: "Men", price: 130, img: "Design For Men/Dolce & Gabbana The One Intense.jpg", notes: "Cardamom, Leather" },
+                { id: 9, name: "MYSLF Intense", brand: "YSL", cat: "Designer", gender: "Men", price: 140, img: "Design For Men/YSL MYSLF Intense.jpg", notes: "Orange Blossom, Wood" },
+                { id: 10, name: "Born In Roma Intense", brand: "Valentino", cat: "Designer", gender: "Men", price: 150, img: "Design For Men/valentino uomo born in roma intense.avif", notes: "Vanilla, Ginger" },
 
-        function showCategory(cat) {
-            currentCategory = cat;
-            document.getElementById('firstChoice').classList.add('hidden');
-            document.getElementById('genderChoice').classList.remove('hidden');
-        }
+                // 👩 Designer Women
+                { id: 11, name: "La Vie Est Belle Elixir", brand: "Lancôme", cat: "Designer", gender: "Women", price: 140, img: "Design For Women/l elixir la vie est belle.webp", notes: "Raspberry, Violet" },
+                { id: 12, name: "Black Opium Parfum", brand: "YSL", cat: "Designer", gender: "Women", price: 155, img: "Design For Women/black opiume parfum.jpg", notes: "Coffee, Vanilla" },
+                { id: 13, name: "Black Orchid", brand: "Tom Ford", cat: "Designer", gender: "Women", price: 185, img: "Design For Women/Tom Ford Black Orchid.jpg", notes: "Orchid, Truffle" },
+                { id: 14, name: "Idôle Now", brand: "Lancôme", cat: "Designer", gender: "Women", price: 120, img: "Design For Women/iddol now.jpg", notes: "Rose, Orchid" },
+                { id: 15, name: "Musc Noir For Her", brand: "Narciso Rodriguez", cat: "Designer", gender: "Women", price: 130, img: "Design For Women/narciso rodriguez for her musc noir.webp", notes: "Musk, Plum" },
+                { id: 16, name: "Paradoxe Intense", brand: "Prada", cat: "Designer", gender: "Women", price: 165, img: "Design For Women/Prada Paradoxe Intense.jpg", notes: "Jasmine, Moss" },
+                { id: 17, name: "Tabac Sahara", brand: "Guerlain", cat: "Designer", gender: "Women", price: 380, img: "Design For Women/Guerlain Tabac Sahara.jpg", notes: "Tobacco, Amber" },
+                { id: 18, name: "Lost Cherry", brand: "Tom Ford", cat: "Designer", gender: "Women", price: 395, img: "Design For Women/Tom Ford Lost Cherry.jpg", notes: "Cherry, Almond" },
+                { id: 19, name: "Gorgeous Gardenia", brand: "Gucci", cat: "Designer", gender: "Women", price: 145, img: "Design For Women/Gucci Flora Gorgeous Gardenia.jpg", notes: "Gardenia, Pear" },
+                { id: 20, name: "Crystal Noir", brand: "Versace", cat: "Designer", gender: "Women", price: 115, img: "Design For Women/Versace Crystal Noir (For Women).jpg", notes: "Ginger, Coconut" },
+                { id: 21, name: "Her Elixir", brand: "Burberry", cat: "Designer", gender: "Women", price: 150, img: "Design For Women/Burberry Her Elixir de Parfum.jpg", notes: "Strawberry, Blackberry" },
 
-        function animateCards(pageId) {
-            const page = document.getElementById(pageId);
-            const cards = page.querySelectorAll('.perfume-card, .bottle-card');
-            cards.forEach((card, index) => {
+                // ⚜️ Niche Men
+                { id: 22, name: "Ombre Nomade", brand: "Louis Vuitton", cat: "Niche", gender: "Men", price: 420, img: "Niche Man/Ombre Nomade – Louis Vuitton.jpg", notes: "Oud, Benzoin" },
+                { id: 23, name: "Angels’ Share", brand: "Kilian", cat: "Niche", gender: "Men", price: 245, img: "Niche Man/Kilian Angels’ Shar.jpg", notes: "Cognac, Cinnamon" },
+                { id: 24, name: "Side Effect", brand: "Initio", cat: "Niche", gender: "Men", price: 290, img: "Niche Man/Initio Side Effect.jpg", notes: "Tobacco, Rum" },
+                { id: 25, name: "Dior Homme Intense", brand: "Dior", cat: "Niche", gender: "Men", price: 180, img: "Niche Man/Dior Homme Intense.jpg", notes: "Iris, Amber" },
+                { id: 26, name: "Reflection Man", brand: "Amouage", cat: "Niche", gender: "Men", price: 340, img: "Niche Man/Reflection Man - Amouage.jpg", notes: "Iris, Neroli" },
+                { id: 27, name: "Torino21", brand: "Xerjoff", cat: "Niche", gender: "Men", price: 210, img: "Niche Man/Torino21 - Xerjoff.jpg", notes: "Mint, Lemon" },
+                { id: 28, name: "Layton Exclusif", brand: "PDM", cat: "Niche", gender: "Men", price: 320, img: "Niche Man/Layton Exclusif - Parfums de Marly.jpg", notes: "Coffee, Civet" },
+                { id: 29, name: "Black Saffron", brand: "Byredo", cat: "Niche", gender: "Men", price: 195, img: "Niche Man/Black Saffron Absolu - Byredo.jpg", notes: "Saffron, Leather" },
+                { id: 30, name: "Black Afgano", brand: "Nasomatto", cat: "Niche", gender: "Men", price: 185, img: "Niche Man/Black Afgano - Nasomatto.jpg", notes: "Cannabis, Resin" },
+                { id: 31, name: "Aventus", brand: "Creed", cat: "Niche", gender: "Men", price: 450, img: "Niche Man/Aventus - Creed.jpg", notes: "Pineapple, Birch" },
+                { id: 32, name: "African Leather", brand: "Memo Paris", cat: "Niche", gender: "Men", price: 310, img: "Niche Man/African Leather - Memo Paris.jpg", notes: "Cardamom, Leather" },
+
+                // 🌸 Niche Women
+                { id: 33, name: "Love Don't Be Shy", brand: "Kilian", cat: "Niche", gender: "Women", price: 295, img: "Niche For Women/kilian love donot be shy.jpg", notes: "Marshmallow, Orange Blossom" },
+                { id: 34, name: "Gypsy Water", brand: "Byredo", cat: "Niche", gender: "Women", price: 200, img: "Niche For Women/byredo gypsy water.jpg", notes: "Juniper, Pine" },
+                { id: 35, name: "Delina", brand: "Parfums de Marly", cat: "Niche", gender: "Women", price: 330, img: "Niche For Women/de marly delina.jpg", notes: "Turkish Rose, Lychee" },
+                { id: 36, name: "Pink Me Up", brand: "Atelier des Ors", cat: "Niche", gender: "Women", price: 225, img: "Niche For Women/pink me up.jpg", notes: "Champagne, Blackberry" },
+                { id: 37, name: "Pacific Rock Moss", brand: "Goldfield & Banks", cat: "Niche", gender: "Women", price: 190, img: "Niche For Women/pacific rock flower.jpg", notes: "Rock Moss, Sage" },
+                { id: 38, name: "Milk Orchid", brand: "Goldfield & Banks", cat: "Niche", gender: "Women", price: 215, img: "Niche For Women/milk archid.jpg", notes: "Milk, Orchid" },
+                { id: 39, name: "Guidance", brand: "Amouage", cat: "Niche", gender: "Women", price: 360, img: "Niche For Women/guidance.jpg", notes: "Pear, Hazelnut" },
+                { id: 40, name: "Flamenco", brand: "Ramon Monegal", cat: "Niche", gender: "Women", price: 280, img: "Niche For Women/flamenco extrait de parfum.jpg", notes: "Raspberry, Violet" },
+                { id: 41, name: "Wind Flowers", brand: "Creed", cat: "Niche", gender: "Women", price: 350, img: "Niche For Women/creed wind flowers.jpg", notes: "Jasmine, Peach" },
+                { id: 42, name: "Sintra", brand: "Memo Paris", cat: "Niche", gender: "Women", price: 310, img: "Niche For Women/memo paris sintra.jpg", notes: "Neroli, Marshmallow" },
+
+                // 🐪 Arabic Men
+                { id: 43, name: "The Kingdom", brand: "Assaf", cat: "Arabic", gender: "Men", price: 85, img: "Arabic Men/the kingdom for men.jpg", notes: "Oud, Amber" },
+                { id: 44, name: "Hawas", brand: "Rasasi", cat: "Arabic", gender: "Men", price: 60, img: "Arabic Men/rasasi hawas.jpg", notes: "Watery, Plum" },
+                { id: 45, name: "Musamam Black", brand: "Lattafa", cat: "Arabic", gender: "Men", price: 75, img: "Arabic Men/musamam black intense.jpg", notes: "Leather, Spices" },
+                { id: 46, name: "Qaed Al Fursan", brand: "Lattafa", cat: "Arabic", gender: "Men", price: 45, img: "Arabic Men/lattafa qaed al fursan.jpg", notes: "Pineapple, Saffron" },
+                { id: 47, name: "Woody Intense", brand: "Arabian Oud", cat: "Arabic", gender: "Men", price: 110, img: "Arabic Men/arabian oud woody intense.jpg", notes: "Sandalwood, Rose" },
+
+                // 🌸 Arabic Women
+                { id: 48, name: "Pink Arrogant", brand: "Assaf", cat: "Arabic", gender: "Women", price: 80, img: "Arabic Women/بينك اروجيت عساف.jpg", notes: "Floral, Sweet" },
+                { id: 49, name: "Bade'e Al Oud Pink", brand: "Lattafa", cat: "Arabic", gender: "Women", price: 65, img: "Arabic Women/بديع العود البينك.jpg", notes: "Rose, Oud" },
+                { id: 50, name: "Angham", brand: "Lattafa", cat: "Arabic", gender: "Women", price: 55, img: "Arabic Women/انغام لطافه.jpg", notes: "Vanilla, Floral" },
+                { id: 51, name: "Eclair", brand: "Lattafa", cat: "Arabic", gender: "Women", price: 50, img: "Arabic Women/eclear lattafa.webp", notes: "Gourmand, Sweet" },
+                { id: 52, name: "Ameerat Al Arab", brand: "Asdaaf", cat: "Arabic", gender: "Women", price: 45, img: "Arabic Women/اميره العرب.jpg", notes: "White Floral, Musk" }
+            ],
+
+            state: { category: '', gender: '', cart: [], currentPage: 'page-hero' },
+
+            init() { 
+                this.loadState(); 
                 setTimeout(() => {
-                    card.style.opacity = "1";
-                    card.style.transform = "translateY(0)";
-                }, index * 120);
-            });
-        }
+                    document.getElementById('loader').style.opacity = '0';
+                    setTimeout(() => document.getElementById('loader').classList.add('hidden'), 700);
+                }, 1000);
+                this.syncUI(); 
+            },
 
-        function openPerfumePage(gender) {
-            document.getElementById('genderChoice').classList.add('hidden');
-            let pageId = "";
-            if (currentCategory === 'Niche') {
-                pageId = (gender === 'Men') ? 'nicheMenPage' : 'nicheWomenPage';
-            } else {
-                pageId = (gender === 'Men') ? 'designerMenPage' : 'designerWomenPage';
-            }
-            document.getElementById(pageId).classList.remove('hidden');
-            window.scrollTo(0, 0);
-            setTimeout(() => { animateCards(pageId); }, 200);
-        }
+            navigate(pageId) {
+                const current = document.getElementById(this.state.currentPage);
+                const next = document.getElementById(pageId);
+                current.classList.add('exit');
+                setTimeout(() => {
+                    current.classList.remove('active', 'exit');
+                    next.classList.add('active');
+                    this.state.currentPage = pageId;
+                    window.scrollTo(0,0);
+                    if(pageId === 'page-store') this.render();
+                }, 400);
+            },
 
-        function showSupplyChain() {
-            const ids = ['firstChoice', 'genderChoice', 'designerMenPage', 'designerWomenPage', 'nicheMenPage', 'nicheWomenPage'];
-            ids.forEach(id => document.getElementById(id).classList.add('hidden'));
-            document.getElementById('supplyChainPage').classList.remove('hidden');
-            window.scrollTo(0, 0);
-            setTimeout(() => { animateCards('supplyChainPage'); }, 200);
-        }
+            setCategory(c) { this.state.category = c; this.navigate('page-gender'); },
+            enterStore(g) { 
+                this.state.gender = g; 
+                document.getElementById('storeTitle').innerText = `${this.state.category} Collection`;
+                this.navigate('page-store');
+            },
 
-        function goBackToFirst() {
-            document.getElementById('genderChoice').classList.add('hidden');
-            document.getElementById('supplyChainPage').classList.add('hidden');
-            document.getElementById('firstChoice').classList.remove('hidden');
-        }
+            filter() {
+                const q = document.getElementById('search').value.toLowerCase();
+                const filtered = this.database
+                    .filter(p => p.cat === this.state.category && p.gender === this.state.gender)
+                    .map(p => {
+                        let score = 0;
+                        if(p.name.toLowerCase().includes(q)) score += 10;
+                        if(p.brand.toLowerCase().includes(q)) score += 5;
+                        if(p.notes.toLowerCase().includes(q)) score += 2;
+                        return { ...p, score };
+                    })
+                    .filter(p => q === "" || p.score > 0)
+                    .sort((a,b) => b.score - a.score);
+                
+                this.drawGrid(filtered);
+            },
 
-        function goBackToGender() {
-            const ids = ['designerMenPage', 'designerWomenPage', 'nicheMenPage', 'nicheWomenPage'];
-            ids.forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-                document.querySelectorAll('#' + id + ' .perfume-card').forEach(c => { c.style.opacity = "0"; c.style.transform = "translateY(40px)"; });
-            });
-            document.getElementById('genderChoice').classList.remove('hidden');
-        }
+            render() { this.filter(); },
 
-        function filterSelection(c, pageId) {
-            let x = document.getElementById(pageId).getElementsByClassName("perfume-card");
-            for (let i = 0; i < x.length; i++) {
-                x[i].style.opacity = "0"; x[i].style.transform = "translateY(40px)";
-                x[i].style.display = (c == "all" || x[i].classList.contains(c)) ? "flex" : "none";
-            }
-            setTimeout(() => { animateCards(pageId); }, 100);
-            let btns = document.getElementById(pageId).getElementsByClassName("btn-filter");
-            for (let b of btns) b.classList.remove("active");
-            event.currentTarget.classList.add("active");
-        }
+            drawGrid(items) {
+                const grid = document.getElementById('perfumeGrid');
+                grid.innerHTML = '';
+                const fragment = document.createDocumentFragment();
+
+                items.forEach((p, i) => {
+                    const card = document.createElement('div');
+                    card.className = 'perfume-card';
+                    card.onclick = () => this.openProduct(p.id);
+                    card.innerHTML = `
+                        <div class="h-64 flex items-center justify-center mb-6">
+                            <img src="${p.img}" loading="lazy" class="max-h-full object-contain">
+                        </div>
+                        <p class="text-[9px] text-[#c5a059] font-bold uppercase tracking-widest">${p.brand}</p>
+                        <h3 class="text-sm font-bold uppercase mb-2">${p.name}</h3>
+                        <p class="text-xs text-gray-400">$${p.price}.00</p>
+                    `;
+                    fragment.appendChild(card);
+                    setTimeout(() => { card.style.opacity = 1; card.style.transform = "translateY(0)"; }, i * 40);
+                });
+                grid.appendChild(fragment);
+            },
+
+            openProduct(id) {
+                const p = this.database.find(x => x.id === id);
+                document.getElementById('productModal').innerHTML = `
+                    <div class="bg-gray-50 flex items-center justify-center p-8"><img src="${p.img}" class="max-h-full object-contain"></div>
+                    <div class="p-10 flex flex-col justify-center relative">
+                        <button onclick="App.closeAll()" class="absolute top-6 right-6 text-gray-300">✕</button>
+                        <h2 class="text-3xl font-bold mb-4 luxury-font">${p.name}</h2>
+                        <p class="text-gray-400 text-xs mb-6 uppercase tracking-widest">${p.brand} • ${p.notes}</p>
+                        <p class="text-gray-500 text-sm leading-loose mb-10">Luxury artisanal fragrance crafted with the finest ingredients.</p>
+                        <div class="flex items-center gap-8 mt-auto pt-8 border-t">
+                            <span class="text-xl font-light">$${p.price}</span>
+                            <button onclick="App.addToCart(${p.id}, this)" class="btn-lux flex-1">Add to bag</button>
+                        </div>
+                    </div>`;
+                document.getElementById('productModal').classList.add('modal-open');
+                this.showOverlay();
+            },
+
+            addToCart(id, btn) {
+                if(btn) btn.innerText = "ADDED ✓";
+                const item = this.state.cart.find(x => x.id === id);
+                if(item) item.qty++; else this.state.cart.push({id, qty: 1});
+                this.syncUI(); this.save();
+                this.showToast("Selection added to bag");
+                setTimeout(() => { if(btn) btn.innerText = "ADD TO BAG"; }, 1000);
+            },
+
+            syncUI() {
+                const count = this.state.cart.reduce((s, c) => s + c.qty, 0);
+                document.getElementById('cartCount').innerText = count;
+                document.getElementById('cartItems').innerHTML = this.state.cart.map(c => {
+                    const p = this.database.find(x => x.id === c.id);
+                    return `<div class="flex gap-4 items-center border-b pb-4">
+                        <img src="${p.img}" class="w-16 h-16 object-contain">
+                        <div class="flex-grow">
+                            <p class="text-[10px] font-bold uppercase">${p.name}</p>
+                            <p class="text-[10px] text-[#c5a059]">$${p.price}</p>
+                            <div class="flex items-center gap-4 mt-2">
+                                <button onclick="App.updateQty(${p.id}, -1)" class="w-5 h-5 border text-[10px]">-</button>
+                                <span class="text-[10px]">${c.qty}</span>
+                                <button onclick="App.updateQty(${p.id}, 1)" class="w-5 h-5 border text-[10px]">+</button>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('');
+                const total = this.state.cart.reduce((s, c) => s + (this.database.find(x => x.id === c.id).price * c.qty), 0);
+                document.getElementById('cartTotal').innerText = `$${total.toFixed(2)}`;
+            },
+
+            updateQty(id, delta) {
+                const item = this.state.cart.find(x => x.id === id);
+                if(item) { item.qty += delta; if(item.qty <= 0) this.state.cart = this.state.cart.filter(x => x.id !== id); }
+                this.syncUI(); this.save();
+            },
+
+            openCheckout() {
+                if(this.state.cart.length === 0) return;
+                const total = this.state.cart.reduce((s, c) => s + (this.database.find(x => x.id === c.id).price * c.qty), 0);
+                document.getElementById('checkoutSummary').innerHTML = `<div class="flex justify-between font-bold"><span>Total Order</span><span>$${total.toFixed(2)}</span></div>`;
+                this.closeAll(); this.toggleModal('checkoutModal');
+            },
+
+            handleOrder(e) {
+                e.preventDefault();
+                alert("Order confirmed! Thank you.");
+                this.state.cart = []; this.save(); location.reload();
+            },
+
+            showToast(msg) {
+                const t = document.createElement('div');
+                t.className = 'toast'; t.innerText = msg;
+                document.getElementById('toastBox').appendChild(t);
+                setTimeout(() => t.remove(), 2500);
+            },
+
+            showOverlay() { const ov = document.getElementById('overlay'); ov.style.display = 'block'; setTimeout(() => ov.style.opacity = '1', 10); },
+            closeAll() { document.querySelectorAll('.side-panel, .modal').forEach(el => el.classList.remove('open', 'modal-open')); const ov = document.getElementById('overlay'); ov.style.opacity = '0'; setTimeout(() => ov.style.display = 'none', 400); },
+            togglePanel(id) { document.getElementById(id).classList.add('open'); this.showOverlay(); },
+            toggleModal(id) { document.getElementById(id).classList.add('modal-open'); this.showOverlay(); },
+            save() { localStorage.setItem('ahmed_perfumes_v5', JSON.stringify(this.state)); },
+            loadState() { const s = localStorage.getItem('ahmed_perfumes_v5'); if(s) { const data = JSON.parse(s); this.state.cart = data.cart || []; } }
+        };
     </script>
 </body>
 </html>
